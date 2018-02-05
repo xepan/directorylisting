@@ -4,10 +4,10 @@ namespace xepan\listing;
 
 class Model_ListCategory extends \xepan\base\Model_Table{
 	public $table='list_category';
-	public $status = ['Published','UnPublished'];
+	public $status = ['Active','Inactive'];
 	public $actions = [
-					'Active'=>['view','edit','delete','deactivate'],
-					'Inactive'=>['view','edit','delete','activate']
+					'Active'=>['view','list_association','edit','delete','deactivate'],
+					'Inactive'=>['view','list_association','edit','delete','activate']
 					];
 
 	public $acl_type = "Listing\Category";
@@ -34,6 +34,24 @@ class Model_ListCategory extends \xepan\base\Model_Table{
 		$this->is(['name|to_trim|required']);
 		$this->add('dynamic_model\Controller_AutoCreator');		
 
+	}
+
+	function page_list_association($page){
+		$page->add('View')->set('hello');
+	}
+
+	function list_association(){
+
+	}
+
+	function deactivate(){
+		$this['status'] = 'Inactive';
+		$this->save();
+	}
+
+	function activate(){
+		$this['status'] = 'Active';
+		$this->save();	
 	}
 
 }
