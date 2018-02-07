@@ -30,7 +30,7 @@ class Initiator extends \Controller_Addon {
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
 		->setBaseURL('./vendor/xepan/listing/');
 
-		 // $this->app->exportFrontEndTool('xepan\listing\Tool_PostList','Blog');
+		 $this->app->exportFrontEndTool('xepan\listing\Tool_Category','Listing');
 
 		return $this;
 	}

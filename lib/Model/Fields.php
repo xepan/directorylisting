@@ -4,7 +4,7 @@ namespace xepan\listing;
 
 class Model_Fields extends \xepan\base\Model_Table{
 	public $table='list_fields';
-	public $status = ['Published','UnPublished'];
+	public $status = ['Active','Inactive'];
 	public $actions = [
 					'Active'=>['view','edit','delete','deactivate'],
 					'Inactive'=>['view','edit','delete','activate']
@@ -17,7 +17,7 @@ class Model_Fields extends \xepan\base\Model_Table{
 
 		$this->addField('name');
 		$this->addField('type');
-		$this->addField('status')->enum(['Active','InActive'])->defaultValue('Active');
+		$this->addField('status')->enum(['Active','Inactive'])->defaultValue('Active');
 		$this->addField('value');
 		$this->addField('is_mandatory')->type('boolean')->defaultValue(false);
 		$this->addField('placeholder');
@@ -29,6 +29,16 @@ class Model_Fields extends \xepan\base\Model_Table{
 		$this->is(['name|to_trim|required']);
 		$this->add('dynamic_model\Controller_AutoCreator');		
 
+	}
+
+	function deactivate(){
+		$this['status'] = 'Inactive';
+		$this->save();
+	}
+
+	function activate(){
+		$this['status'] = 'Active';
+		$this->save();
 	}
 
 }
