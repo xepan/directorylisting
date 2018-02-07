@@ -10,7 +10,7 @@ class Model_Association_ListCategory extends \xepan\base\Model_Table{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xepan\listing\ListCategory','list_category_id');
+		$this->hasOne('xepan\listing\Category','list_category_id');
 		$this->hasOne('xepan\listing\List','list_id');
 
 	}

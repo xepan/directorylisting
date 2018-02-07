@@ -4,12 +4,16 @@ namespace xepan\listing;
 
 class Tool_Category extends \xepan\cms\View_Tool{
 	public $options = [
-					];
-
+					'template'=>'category'
+				];
+	
 	function init(){
 		parent::init();
 
-		$this->add('View')->set('category tool');
+		$this->cl = $cl = $this->add('xepan\listing\View_CategoryLister',['options'=>$this->options]);
 	}
 
+	function getTemplate(){
+		return $this->cl->template;
+	}
 }

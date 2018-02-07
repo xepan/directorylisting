@@ -8,7 +8,7 @@ class page_category extends \xepan\base\Page {
 	function init(){
 		parent::init();
 
-		$listing_category_model = $this->add('xepan\listing\Model_ListCategory');
+		$listing_category_model = $this->add('xepan\listing\Model_Category');
 
 		$crud = $this->add('xepan\hr\CRUD');
 		$crud->setModel($listing_category_model);
