@@ -23,6 +23,7 @@ class Model_List extends \xepan\base\Model_Table{
 		$this->hasMany('xepan/listing/List','category_id');
 
 		$this->addHook('beforeSave',$this);
+		$this->addHook('beforeDelete',$this);
 	}
 
 	function beforeSave(){
@@ -39,6 +40,16 @@ class Model_List extends \xepan\base\Model_Table{
 		}else{
 			$this->updateDB();
 		}
+	}
+
+	function beforeDelete(){
+		$this->deleteTable();
+
+	}
+
+	function deleteTable(){
+		$query = 'DROP TABLE IF EXISTS '.$this->getTableName().";";
+		$this->app->db->dsql()->expr($query)->execute();
 	}
 
 	function checkDuplicate(){

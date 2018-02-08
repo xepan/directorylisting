@@ -54,6 +54,7 @@ class Model_Fields extends \xepan\base\Model_Table{
 		$this->add('dynamic_model\Controller_AutoCreator');		
 
 		$this->addHook('beforeSave',$this);
+		$this->addHook('beforeDelete',$this);
 	}
 
 	function beforeSave(){
@@ -64,6 +65,16 @@ class Model_Fields extends \xepan\base\Model_Table{
 		}
 
 		$this->updateDB();
+	}
+
+	function beforeDelete(){
+		$this->deleteColumn();
+
+	}
+
+	function deleteColumn(){
+		$query = 'ALTER TABLE '.$this->getTableName().' DROP COLUMN '.$this->dbColumnName().';';
+		$this->app->db->dsql()->expr($query)->execute();
 	}
 
 	function checkDuplicate(){
@@ -86,6 +97,10 @@ class Model_Fields extends \xepan\base\Model_Table{
 		return $table_name = 'xepan_listing_'.$this->app->normalizeName(strtolower($list_name));
 	}
 
+	function dbColumnName(){
+		return $this->app->normalizeName(strtolower($this['name']));
+	}
+
 	function updateDB($is_dirty=false){
 		$table_name = $this->getTableName();
 
@@ -100,15 +115,15 @@ class Model_Fields extends \xepan\base\Model_Table{
 			// alter column query 
 			if($this->isDirty('name')){
 				$old_model = $this->add('xepan\listing\Model_Fields')->load($this->id);
-				$old_column_name = $this->app->normalizeName($old_model['name']);
+				$old_column_name = $old_model->dbColumnName();
 
-				$query = 'ALTER TABLE '.$table_name.' CHANGE COLUMN '.$old_column_name.' '.$this['name'].' '.$db_field_type.';';
+				$query = 'ALTER TABLE '.$table_name.' CHANGE COLUMN '.$old_column_name.' '.$this->dbColumnName().' '.$db_field_type.';';
 			}else{
-				$query = 'ALTER TABLE '.$table_name.' MODIFY COLUMN '.$this['name'].' '.$db_field_type.';';
+				$query = 'ALTER TABLE '.$table_name.' MODIFY COLUMN '.$this->dbColumnName().' '.$db_field_type.';';
 			}
 		}else {
 			// add column query;
-			$query = 'ALTER TABLE `'.$table_name.'` ADD COLUMN `'.$this['name'].'`  '.$db_field_type.' NULL DEFAULT NULL;';
+			$query = 'ALTER TABLE `'.$table_name.'` ADD COLUMN `'.$this->dbColumnName().'`  '.$db_field_type.' NULL DEFAULT NULL;';
 		}
 		
 		$this->app->db->dsql()->expr($query)->execute();
