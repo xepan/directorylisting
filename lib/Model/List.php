@@ -15,12 +15,22 @@ class Model_List extends \xepan\base\Model_Table{
 		parent::init();
 
 		$this->addField('name');
+		$this->addField('slug_url');
 		$this->addField('status')->enum(['Active','InActive'])->defaultValue('Active');
 		
 		$this->is(['name|to_trim|required']);
 		$this->add('dynamic_model\Controller_AutoCreator');	
 
-		$this->hasMany('xepan/listing/List','category)_id');
+		$this->hasMany('xepan/listing/List','category_id');
+
+		$this->addHook('beforeSave',$this);
+	}
+
+	function beforeSave(){
+
+		$list = $this->add('xepan\listing\Model_List');
+		$list->addCondition('name',$this['name']);
+
 	}
 
 	function page_category_association($page){
