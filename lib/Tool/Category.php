@@ -4,7 +4,8 @@ namespace xepan\listing;
 
 class Tool_Category extends \xepan\cms\View_Tool{
 	public $options = [
-					'template'=>'category'
+					'template'=>'tree',
+					'show_image'=>true
 				];
 	
 	function init(){

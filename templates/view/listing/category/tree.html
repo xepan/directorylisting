@@ -1,0 +1,18 @@
+<div id="{$_name}" class="{$class}" style="{$style}">
+	<div class="row">
+	{category_list}
+		<div class="col-md-4">
+		{rows}
+		{row}
+            <ul class="treeview">
+                <li>{$name}</li>
+                
+            </ul>
+		{/}
+			{$nested_category}
+		{/}
+		</div>
+	{/}
+	</div>
+	{$Content}
+</div>

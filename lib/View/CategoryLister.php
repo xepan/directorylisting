@@ -16,7 +16,7 @@ class View_CategoryLister extends \CompleteLister{
 		$model->setOrder('display_sequence','desc');
 		$this->setModel($model);
 
-		// $this->add('xepan\cms\Controller_Tool_Optionhelper',['options'=>$this->options,'model'=>$model]);
+		$this->add('xepan\cms\Controller_Tool_Optionhelper',['options'=>$this->options,'model'=>$model]);
 	}
 	
 	function formatRow(){
@@ -48,7 +48,7 @@ class View_CategoryLister extends \CompleteLister{
 			$sub_cat->addCondition('is_website_display',true);
 			$sub_cat->setOrder('display_sequence','desc');
 			if($sub_cat->count()->getOne() > 0){
-				$sub_c = $this->add('xepan\listing\View_CategoryLister',['options'=>$this->options],'nested_category',['view\listing\/'.$this->options['template'],'category_list']);
+				$sub_c = $this->add('xepan\listing\View_CategoryLister',['options'=>$this->options],'nested_category',['view\listing\category\/'.$this->options['template'],'category_list']);
 				$sub_c->setModel($sub_cat);
 				$this->current_row_html['nested_category']= $sub_c->getHTML();
 			}else{
@@ -59,7 +59,7 @@ class View_CategoryLister extends \CompleteLister{
 	}
 
 	function defaultTemplate(){
-		return ['view/listing/'.$this->options['template']];
+		return ['view/listing/category/'.$this->options['template']];
 	}
 
 	// function addToolCondition_row_show_item_count($value,$l){
@@ -69,12 +69,12 @@ class View_CategoryLister extends \CompleteLister{
 	// 		$l->current_row_html['item_count'] = $l->model['item_count'];
 	// }
 
-	// function addToolCondition_row_show_image($value,$l){		
-	// 	if(!$value)
-	// 		$l->current_row_html['image_wrapper'] = "";
-	// 	else
-	// 		$l->current_row_html['category_image_url'] = $l->model['cat_image'];
-	// }
+	function addToolCondition_row_show_image($value,$l){		
+		if(!$value)
+			$l->current_row_html['image_wrapper'] = "";
+		else
+			$l->current_row_html['image_url'] = './websites/'.$this->app->current_website_name."/".$l->model['image'];
+	}
 
 
 	// function addToolCondition_row_show_price($value,$l){

@@ -31,6 +31,10 @@ class Initiator extends \Controller_Addon {
 		->setBaseURL('./vendor/xepan/listing/');
 
 		 $this->app->exportFrontEndTool('xepan\listing\Tool_Category','Listing');
+		 $this->app->exportFrontEndTool('xepan\listing\Tool_List','Listing');
+		 $this->app->exportFrontEndTool('xepan\listing\Tool_Filter','Listing');
+		 $this->app->exportFrontEndTool('xepan\listing\Tool_ListDetail','Listing');
+		 $this->app->exportFrontEndTool('xepan\listing\Tool_ListImage','Listing');
 
 		return $this;
 	}

@@ -15,6 +15,7 @@ class Model_Category extends \xepan\base\Model_Table{
 		parent::init();
 
 		$this->hasOne('xepan\listing\ParentCategory','parent_category_id')->sortable(true);
+		$this->hasOne('xepan\listing\List','list_id');
 
 		$this->addField('name');
 		$this->addField('display_sequence')->type('int')->defaultValue(0);
@@ -29,7 +30,6 @@ class Model_Category extends \xepan\base\Model_Table{
 
 
 		// $this->addField('type')->defaultValue('');
-		$this->hasMany('xepan\listing\Category','list_id');
 		
 		$this->is(['name|to_trim|required']);
 		// $this->add('dynamic_model\Controller_AutoCreator');

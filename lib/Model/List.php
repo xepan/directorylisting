@@ -19,7 +19,9 @@ class Model_List extends \xepan\base\Model_Table{
 		$this->addField('status')->enum(['Active','InActive'])->defaultValue('Active');
 		
 		$this->is(['name|to_trim|required']);
-		$this->add('dynamic_model\Controller_AutoCreator');		
+		$this->add('dynamic_model\Controller_AutoCreator');	
+
+		$this->hasMany('xepan/listing/List','category)_id');
 
 	}
 
