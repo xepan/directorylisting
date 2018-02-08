@@ -15,14 +15,12 @@ class Model_List extends \xepan\base\Model_Table{
 		parent::init();
 
 		$this->addField('name');
-		$this->addField('type');
 		$this->addField('status')->enum(['Active','InActive'])->defaultValue('Active');
 		
 		$this->is(['name|to_trim|required']);
 		$this->add('dynamic_model\Controller_AutoCreator');	
 
 		$this->hasMany('xepan/listing/List','category)_id');
-
 	}
 
 	function page_category_association($page){
