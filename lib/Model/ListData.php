@@ -17,11 +17,33 @@ class Model_ListData extends \xepan\base\Model_Table{
 
 		parent::init();
 
+		$validation_array = [];
+
 		foreach ($this->listing->fields() as $field) {
-			$f = $this->addField($field->dbColumnName())->caption($field['name']);
-			$f->type($field->modelFieldType());
+				
+			if($field['field_type'] == "Captcha") continue;
+
+			if($field['field_type'] == "Upload"){
+				$f = $this->add('xepan\filestore\Field_File',$field->dbColumnName());
+			}else{
+				$f = $this->addField($field->dbColumnName());
+				$f->type($field->modelFieldType());
+			}
+
+			$f->caption($field['name']);
 			$f->hint($field['hint']);
+
+			if(in_array($field['field_type'], ['DropDown','radio']) && $values = $field['default_value']){
+				$f->enum(explode(",", $values));
+			}
+
+			if($field['is_mandatory']){
+				$validation_array[] = [$field->dbColumnName()."|required"];
+			}
 		}
+
+		if($validation_array)
+			$this->is($validation_array);
 
 		// predefined fields
 		$this->addField('created_at')->type('datetime');

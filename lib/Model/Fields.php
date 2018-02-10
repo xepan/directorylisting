@@ -30,7 +30,7 @@ class Model_Fields extends \xepan\base\Model_Table{
 								'checkbox'=>'Checkbox',
 								'DropDown'=>'DropDown',
 								'DatePicker'=>"DatePicker",
-								'upload'=>"xepan\base\Upload",
+								'Upload'=>"Upload",
 								'TimePicker'=>"TimePicker",
 								"Captcha"=>'Captcha'
 							)
@@ -38,10 +38,15 @@ class Model_Fields extends \xepan\base\Model_Table{
 		$this->addField('default_value');
 		$this->addField('placeholder');
 		$this->addField('hint');
+
 		$this->addField('is_mandatory')->type('boolean')->defaultValue(false);
 		$this->addField('is_moderate')->type('boolean');
 		$this->addField('is_changable')->type('boolean')->defaultValue(false);
 		$this->addField('is_filterable')->type('boolean')->defaultValue(true);
+
+		$this->addField('is_public')->type('boolean')->defaultValue(true);
+		$this->addField('is_private')->type('boolean')->defaultValue(false);
+		$this->addField('is_premium')->type('boolean')->defaultValue(false);
 
 		$this->addField('status')->enum(['Active','Inactive'])->defaultValue('Active');
 		
@@ -98,7 +103,12 @@ class Model_Fields extends \xepan\base\Model_Table{
 	}
 
 	function dbColumnName(){
-		return $this->app->normalizeName(strtolower($this['name']));
+
+		$field_name = $this->app->normalizeName(strtolower($this['name']));
+		if($this['field_type'] == "Upload"){
+			$field_name .= "_id";
+		}
+		return $field_name;
 	}
 
 	function updateDB($is_dirty=false){
@@ -146,6 +156,9 @@ class Model_Fields extends \xepan\base\Model_Table{
 				break;
 			case 'TimePicker':
 				$type = "time";
+				break;
+			case 'upload':
+				$type = "int";
 				break;
 			default:
 				$type = "varchar(255)";
