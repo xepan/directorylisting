@@ -12,6 +12,6 @@ class Tool_List extends \xepan\cms\View_Tool{
 		parent::init();
 
 		$this->add('View')->set('list tool');
+		
 	}
-
 }

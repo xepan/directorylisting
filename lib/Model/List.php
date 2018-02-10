@@ -6,8 +6,8 @@ class Model_List extends \xepan\base\Model_Table{
 	public $table='list';
 	public $status = ['Published','UnPublished'];
 	public $actions = [
-					'Active'=>['view','fields','category_association','edit','delete','deactivate'],
-					'Inactive'=>['view','fields','category_association','edit','delete','activate']
+					'Active'=>['view','fields','data','category_association','edit','delete','deactivate'],
+					'Inactive'=>['view','fields','data','category_association','edit','delete','activate']
 					];
 
 	public $acl_type = "Listing\List";
@@ -100,7 +100,34 @@ class Model_List extends \xepan\base\Model_Table{
 		$model = $this->add('xepan\listing\Model_Fields');
 		$model->addCondition('list_id',$this->id);
 		$crud = $page->add('xepan\hr\CRUD');
+		$form = $crud->form;
+        $form->add('xepan\base\Controller_FLC')
+        ->showLables(true)
+        ->addContentSpot()
+        // ->makePanelsCoppalsible(true)
+        ->layout([
+                'name'=>'Field Details~c1~6',
+                'field_type'=>'c2~6',
+                'default_value'=>'c11~6',
+                'placeholder'=>'c21~6',
+                'hint'=>'c12~6',
+                'status'=>'c22~6',
+                'is_mandatory'=>'c13~6',
+                'is_moderate'=>'c23~6',
+                'is_changable'=>'c13~6',
+                'is_filterable'=>'c24~6',
+                
+
+            ]);
 		$crud->setModel($model);
 
+	}
+
+	function data(){
+		$this->app->redirect($this->app->url('xepan_listing_listdata',['listid'=>$this->id]));
+	}
+
+	function fields(){
+		return $this->add('xepan\listing\Model_Fields')->addCondition('list_id',$this->id);
 	}
 }

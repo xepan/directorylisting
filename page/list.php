@@ -12,9 +12,22 @@ class page_list extends \xepan\base\Page {
 		// $listing_list_model->add('xepan\listing\Controller_SideBarStatusFilter');
 
 		$crud = $this->add('xepan\hr\CRUD');
+		$form = $crud->form;
+        $form->add('xepan\base\Controller_FLC')
+        ->showLables(true)
+        ->addContentSpot()
+        // ->makePanelsCoppalsible(true)
+        ->layout([
+                'name'=>'List Details~c1~6',
+                'status'=>'c2~6',
+
+            ]);
+
 		$crud->setModel($listing_list_model);
 		$crud->grid->addQuickSearch(['name']);
 		// $crud->grid->addPaginator(10);
+
+		
 	}
 }
 

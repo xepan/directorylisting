@@ -155,6 +155,32 @@ class Model_Fields extends \xepan\base\Model_Table{
 		return $type;
 	}
 
+	function modelFieldType(){
+
+		switch ($this['field_type']) {
+			case 'Number':
+				$type = 'number';
+				break;
+			case 'text':
+				$type = "text";
+				break;
+			case 'checkbox':
+				$type = "checkbox";
+				break;
+			case 'DatePicker':
+				$type = "datetime";
+				break;
+			case 'TimePicker':
+				$type = "time";
+				break;
+			default:
+				$type = "string";
+				break;
+		}
+
+		return $type;
+	}
+
 	function deactivate(){
 		$this['status'] = 'Inactive';
 		$this->save();
