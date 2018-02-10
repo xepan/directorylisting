@@ -4,7 +4,7 @@ namespace xepan\listing;
 
 class Model_ListData extends \xepan\base\Model_Table{
 	public $listing;
-	public $acl_type="listdata";
+	public $acl_type = "listdata";
 	function init(){
 
 		if(is_numeric($this->listing)){
@@ -13,8 +13,8 @@ class Model_ListData extends \xepan\base\Model_Table{
 			$this->listing = $this->add('xepan\listing\Model_List')->loadBy('name',$this->listing);
 		}
 
-		$this->table= $this->listing->getTableName();
-
+		$this->acl_type = $this->table = $this->listing->getTableName();
+		
 		parent::init();
 
 		$validation_array = [];

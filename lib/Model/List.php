@@ -6,7 +6,7 @@ class Model_List extends \xepan\base\Model_Table{
 	public $table='list';
 	public $status = ['Published','UnPublished'];
 	public $actions = [
-					'Active'=>['view','fields','data','category_association','edit','delete','deactivate'],
+					'Active'=>['view','fields','data','manage_layouts','category_association','edit','delete','deactivate'],
 					'Inactive'=>['view','fields','data','category_association','edit','delete','activate']
 					];
 
@@ -130,4 +130,18 @@ class Model_List extends \xepan\base\Model_Table{
 	function fields(){
 		return $this->add('xepan\listing\Model_Fields')->addCondition('list_id',$this->id);
 	}
+
+	function getDataModel(){
+		return $this->add('xepan\listing\Model_ListData',['listing'=>$this]);
+	}
+
+	function page_manage_layouts($page){
+		$m = $this->add('xepan\listing\Model_ListDataFormLayout');
+		$m->addCondition('list_id',$this->id);
+		$crud = $page->add('xepan\base\CRUD');
+		$crud->setModel($m);
+
+		$crud->form->add('View')->set(implode(", ",$this->getDataModel()->getActualFields()));
+	}
+	
 }

@@ -108,7 +108,7 @@ class Model_Fields extends \xepan\base\Model_Table{
 		if($this['field_type'] == "Upload"){
 			$field_name .= "_id";
 		}
-		return $field_name;
+		return trim($field_name);
 	}
 
 	function updateDB($is_dirty=false){
@@ -193,6 +193,7 @@ class Model_Fields extends \xepan\base\Model_Table{
 
 		return $type;
 	}
+
 
 	function deactivate(){
 		$this['status'] = 'Inactive';
