@@ -5,6 +5,9 @@ namespace xepan\listing;
 class Model_ListData extends \xepan\base\Model_Table{
 	public $listing;
 	public $acl_type = "listdata";
+
+	public $validation_array=[];
+
 	function init(){
 
 		if(is_numeric($this->listing)){
@@ -42,8 +45,6 @@ class Model_ListData extends \xepan\base\Model_Table{
 			}
 		}
 
-		if($validation_array)
-			$this->is($validation_array);
 
 		// predefined fields
 		$this->addField('created_at')->type('datetime');

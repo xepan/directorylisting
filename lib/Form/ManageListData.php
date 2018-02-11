@@ -14,6 +14,9 @@ class Form_ManageListData extends \Form {
 		$this->setListModel();
 		$this->setListLayout();
 
+		$this->list_data_model = $this->list_model->getDataModel();
+		if($this->options['list_data_record_id']) $this->list_data_model->load($this->options['list_data_record_id']);
+
 		$fields_in_layout=[];
 		if($this->listing_layout_model->loaded()){
 			$fields_in_layout = $this->listing_layout_model->getFields();
@@ -21,7 +24,6 @@ class Form_ManageListData extends \Form {
 				->addContentSpot()
 				->layout($this->listing_layout_model->getLayoutArray());
 		}
-
 
 
 		foreach ($this->list_model->fields() as $field) {
@@ -46,13 +48,27 @@ class Form_ManageListData extends \Form {
 			if($field['is_mandatory']){
 				$f->validate('required');
 			}
+
+			$f->set($this->list_data_model[$field_name]);
 		}
 		// print_r($fields_in_layout);
 
-		$this->addSubmit($this->options['save_button_caption']);
+		$this->addSubmit($this->options['save_button_caption'])->addClass($this->options['save_button_class']);
+		if($this->isSubmitted()){
+			foreach ($this->list_model->fields() as $field) {
+				if($this->listing_layout_model->loaded() && !in_array($field->dbColumnName(), $fields_in_layout)){
+					continue;
+				} 
+				
+				$field_name = $field->dbColumnName();
+				$this->list_data_model[$field_name] = $this[$field_name];
+			}
 
-
+			$this->list_data_model->save();
+			$this->js(null,$this->js()->univ()->successMessage('DONE'))->reload()->execute();
+		}
 	}
+
 
 	function setListLayout(){
 		return $this->listing_layout_model = $this->add('xepan\listing\Model_ListDataFormLayout')
@@ -66,7 +82,4 @@ class Form_ManageListData extends \Form {
 		return $this->list_model;
 	}
 
-	function setListDataModel(){
-		return $this->list_data_model = $this->add('xepan\listing\Model_ListData',['listing'=>$this->listing]);
-	}
 }
