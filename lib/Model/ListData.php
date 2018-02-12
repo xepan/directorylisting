@@ -4,7 +4,10 @@ namespace xepan\listing;
 
 class Model_ListData extends \xepan\base\Model_Table{
 	public $listing;
-	public $acl_type="listdata";
+	public $acl_type = "listdata";
+
+	public $validation_array=[];
+
 	function init(){
 
 		if(is_numeric($this->listing)){
@@ -13,15 +16,35 @@ class Model_ListData extends \xepan\base\Model_Table{
 			$this->listing = $this->add('xepan\listing\Model_List')->loadBy('name',$this->listing);
 		}
 
-		$this->table= $this->listing->getTableName();
-
+		$this->acl_type = $this->table = $this->listing->getTableName();
+		
 		parent::init();
 
+		$validation_array = [];
+
 		foreach ($this->listing->fields() as $field) {
-			$f = $this->addField($field->dbColumnName())->caption($field['name']);
-			$f->type($field->modelFieldType());
+				
+			if($field['field_type'] == "Captcha") continue;
+
+			if($field['field_type'] == "Upload"){
+				$f = $this->add('xepan\filestore\Field_File',$field->dbColumnName());
+			}else{
+				$f = $this->addField($field->dbColumnName());
+				$f->type($field->modelFieldType());
+			}
+
+			$f->caption($field['name']);
 			$f->hint($field['hint']);
+
+			if(in_array($field['field_type'], ['DropDown','radio']) && $values = $field['default_value']){
+				$f->enum(explode(",", $values));
+			}
+
+			if($field['is_mandatory']){
+				$validation_array[] = [$field->dbColumnName()."|required"];
+			}
 		}
+
 
 		// predefined fields
 		$this->addField('created_at')->type('datetime');

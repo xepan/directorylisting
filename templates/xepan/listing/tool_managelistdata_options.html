@@ -1,0 +1,57 @@
+
+<div id="{$_name}" style="display:none" for-xepan-component="xepan/listing/Tool_ManageListData" class="xepan-tool-options" xepan-component-name="Add List Data">
+  <table class="table table-condensed table-hover xepan-cms-tool-table">
+    <tr class="xepan-tool-option">
+      <td class="xepan-tool-option-title">Select List</td>
+      <td class="xepan-tool-option-value"> 
+        <select id="{$_name}-xepan-listing-add-list" data-attr="listing_id" data-defaultvalue="0">
+        </select>
+      </td>
+    </tr>
+    <tr class="xepan-tool-option">
+      <td class="xepan-tool-option-title">List Layout</td>
+      <td class="xepan-tool-option-value"> 
+        <select id="{$_name}-xepan-listing-layout" data-attr="listing_layout_id" data-defaultvalue="0">
+        </select>
+      </td>
+    </tr>
+  </table>
+  
+  <script>
+    $('#{$_name} [data-attr]').on('change',function(){
+    	$(current_selected_component).attr($(this).data('attr'),$(this).val());
+    });
+
+    $('#{$_name}-xepan-listing-add-list').on('change',function(){
+        $.ajax({
+          url: 'index.php?page=xepan_listing_getrecord_listlayout',
+          type: 'GET',
+          data: {'list_id':$(this).val() },
+          success: function ( data ){
+            $('#{$_name}-xepan-listing-layout').html(data);
+          }
+        });
+    });
+    
+    $('#{$_name}').on('show',function(event){
+      $.ajax({
+        url: 'index.php?page=xepan_listing_getrecord_list',
+        type: 'GET',
+        data: { },
+        success: function ( data ){
+          $('#{$_name}-xepan-listing-add-list').html(data);
+        }
+      });
+      
+    	$('#{$_name} [data-attr]').each(function(index,value){
+        // setting up default value if no option selected
+        var default_value = $(this).attr('data-defaultvalue');
+        if($(current_selected_component).attr($(this).data('attr')))
+          default_value = $(current_selected_component).attr($(this).data('attr'));
+        
+        $(this).val(default_value);
+      });
+
+    })
+  </script>
+</div>

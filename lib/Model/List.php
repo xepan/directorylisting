@@ -6,7 +6,7 @@ class Model_List extends \xepan\base\Model_Table{
 	public $table='list';
 	public $status = ['Published','UnPublished'];
 	public $actions = [
-					'Active'=>['view','fields','data','category_association','edit','delete','deactivate'],
+					'Active'=>['view','fields','data','manage_layouts','category_association','edit','delete','deactivate'],
 					'Inactive'=>['view','fields','data','category_association','edit','delete','activate']
 					];
 
@@ -63,7 +63,7 @@ class Model_List extends \xepan\base\Model_Table{
 
 		$table_name = $this->getTableName();
 		// creating new table
-		$query = 'CREATE TABLE `'.$table_name.'` ( `id` int(11) NOT NULL AUTO_INCREMENT, PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;';
+		$query = 'CREATE TABLE `'.$table_name.'` ( `id` int(11) NOT NULL AUTO_INCREMENT, `created_at` datetime, `updated_at` datetime, `created_by_id` int,`status` varchar(255) ,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;';
 		// update query
 		if($is_dirty){
 			$old_model = $this->add('xepan\listing\Model_List')->load($this->id);
@@ -130,4 +130,18 @@ class Model_List extends \xepan\base\Model_Table{
 	function fields(){
 		return $this->add('xepan\listing\Model_Fields')->addCondition('list_id',$this->id);
 	}
+
+	function getDataModel(){
+		return $this->add('xepan\listing\Model_ListData',['listing'=>$this]);
+	}
+
+	function page_manage_layouts($page){
+		$m = $this->add('xepan\listing\Model_ListDataFormLayout');
+		$m->addCondition('list_id',$this->id);
+		$crud = $page->add('xepan\base\CRUD');
+		$crud->setModel($m);
+
+		$crud->form->add('View')->set(implode(", ",$this->getDataModel()->getActualFields()));
+	}
+	
 }
