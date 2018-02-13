@@ -29,5 +29,31 @@ class page_getrecord extends \Page {
 		echo $option;
 		exit;
 	}
+
+	function page_listingstatus(){
+		$list = $this->add('xepan\listing\Model_List');
+		$list->load($_GET['listing_id']);
+		
+		$option = "<option value='0'>Please Select </option>";
+		foreach (explode(",",$list['list_data_status']) as $key => $status) {
+			$option .= "<option value='".trim($status)."'>".trim($status)."</option>";
+		}
+		echo $option;
+		exit;	
+	}
+
+	function page_listingcategory(){
+		$model = $this->add('xepan\listing\Model_Category');
+		$model->addCondition('list_id',$_GET['listing_id']);
+
+		$option = "<option value='0'>Please Select </option>";
+		foreach ($model as $cat){
+			$option .= "<option value='".$cat['id']."'>".$cat['name']."</option>";
+		}
+
+		echo $option;
+		exit;	
+	}
+
 }
 

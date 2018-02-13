@@ -115,7 +115,7 @@ class Model_Fields extends \xepan\base\Model_Table{
 		$table_name = $this->getTableName();
 
 		// if isloaded and is dirty ('name'), field_type
-		// alter table command		
+		// alter table command
 		if(($this->loaded() AND !($this->isDirty('name') || $this->isDirty('field_type'))))
 			return;
 
@@ -134,6 +134,7 @@ class Model_Fields extends \xepan\base\Model_Table{
 		}else {
 			// add column query;
 			$query = 'ALTER TABLE `'.$table_name.'` ADD COLUMN `'.$this->dbColumnName().'`  '.$db_field_type.' NULL DEFAULT NULL;';
+			// $query = 'ALTER TABLE `'.$table_name.'` ADD `'.$this->dbColumnName().'`  '.$db_field_type.' NULL DEFAULT NULL, ADD `is_mandatory` tinyint(4) NULL DEFAULT NULL, ADD `is_moderate` tinyint(4) NULL DEFAULT NULL,ADD `is_changable` tinyint(4) NULL DEFAULT NULL,ADD `is_filterable` tinyint(4) NULL DEFAULT NULL,ADD `is_public` tinyint(4) NULL DEFAULT NULL,ADD `is_private` tinyint(4) NULL DEFAULT NULL, ADD `is_premium` tinyint(4) NULL DEFAULT NULL;';
 		}
 		
 		$this->app->db->dsql()->expr($query)->execute();
