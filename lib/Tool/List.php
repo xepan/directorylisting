@@ -9,6 +9,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'show_add_button'=>true, // true, false
 				'show_edit_button'=>true, // true, false
 				'show_delete_button'=>true, // true, false
+				'show_quick_search'=>true,
 				'show_public_fields'=>true, // true, false
 				'show_private_fields'=>'onLogin', //0,always,onLogin
 				'show_premium_fields'=>'onPremiumUser', //0,always,onLogin, onPremiumUser
@@ -39,9 +40,13 @@ class Tool_List extends \xepan\cms\View_Tool{
 
 		$fields = $this->getDisplayFields();
 
-		$this->lister = $crud = $this->add('xepan\base\CRUD',['allow_add'=>$this->options['show_add_button'],'allow_edit'=>$this->options['show_edit_button'],'allow_del'=>$this->options['show_delete_button']]);
-		if($template = $this->getCustomTemplatePath())
-			$this->lister->defaultTemplate = $template;
+		if($template = $this->getCustomTemplatePath()){
+			$this->lister = $crud = $this->add('xepan\base\CRUD',['allow_add'=>$this->options['show_add_button'],'allow_edit'=>$this->options['show_edit_button'],'allow_del'=>$this->options['show_delete_button']],null,$template);
+		}else{
+			if($this->options['custom_template'])
+				$this->add('View')->set('List Template not found');
+			$this->lister = $crud = $this->add('xepan\base\CRUD',['allow_add'=>$this->options['show_add_button'],'allow_edit'=>$this->options['show_edit_button'],'allow_del'=>$this->options['show_delete_button']]);
+		}
 
 		$crud->setModel($listdata_model,array_keys($fields));
 
@@ -50,10 +55,11 @@ class Tool_List extends \xepan\cms\View_Tool{
 
 	function getCustomTemplatePath(){
 		if($this->options['custom_template']){
-			$path = getcwd()."/websites/".$this->app->current_website_name."/www/view/tool/list/".$this->options['custom_template'].".html";
+			$path = getcwd()."/websites/".$this->app->current_website_name."/www/view/tool/listing/".$this->options['custom_template'].".html";
 			if(file_exists($path)){
 				return $path;
 			}
+			return 0;
 		}
 	}
 
@@ -91,6 +97,14 @@ class Tool_List extends \xepan\cms\View_Tool{
 		}
 		$fields = array_merge($fields,$premium_fields);
 		return $fields;
+	}
+
+	function addToolCondition_show_quick_search($value,$model){
+		if($value){			
+			$this->lister->grid->addQuickSearch($this->listdata_model->filterable_fields);
+		}else{
+			$this->lister->grid->template->tryDel('quick_search_wrapper');
+		}
 	}
 
 	function addToolCondition_show_data_list($value,$model){		
