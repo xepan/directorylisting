@@ -11,7 +11,9 @@ class Tool_Category extends \xepan\cms\View_Tool{
 	function init(){
 		parent::init();
 
-		$this->cl = $cl = $this->add('xepan\listing\View_CategoryLister',['options'=>$this->options]);
+		if($this->owner instanceof \AbstractController) return;
+		
+		// $this->cl = $cl = $this->add('xepan\listing\View_CategoryLister',['options'=>$this->options]);
 	}
 
 	function getTemplate(){
