@@ -15,12 +15,14 @@ class Model_List extends \xepan\base\Model_Table{
 		parent::init();
 
 		$this->addField('name');
+		$this->addField('list_data_status')->type('text')->hint('comma (,) seperated multiple values i.e. Pending,Approved,Rejected');
 		$this->addField('status')->enum(['Active','InActive'])->defaultValue('Active');
-		
+
 		$this->is(['name|to_trim|required']);
-		$this->add('dynamic_model\Controller_AutoCreator');	
 
 		$this->hasMany('xepan/listing/List','category_id');
+
+		$this->add('dynamic_model\Controller_AutoCreator');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
@@ -35,11 +37,7 @@ class Model_List extends \xepan\base\Model_Table{
 			// update table name 
 		// if not id
 			// create table
-		if($this->loaded() && $this->isDirty('name')){
-			$this->updateDB($dirty=true);
-		}else{
-			$this->updateDB();
-		}
+		$this->updateDB();
 	}
 
 	function beforeDelete(){
@@ -59,18 +57,17 @@ class Model_List extends \xepan\base\Model_Table{
 		return $list->count()->getOne();
 	}
 
-	function updateDB($is_dirty=false){
+	function updateDB(){
+		if($this->loaded() && !$this->isDirty('name')) return;
 
 		$table_name = $this->getTableName();
 		// creating new table
 		$query = 'CREATE TABLE `'.$table_name.'` ( `id` int(11) NOT NULL AUTO_INCREMENT, `created_at` datetime, `updated_at` datetime, `created_by_id` int,`status` varchar(255) ,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;';
-		// update query
-		if($is_dirty){
+		if($this->loaded() && $this->isDirty('name')){
 			$old_model = $this->add('xepan\listing\Model_List')->load($this->id);
 			$old_table_name = 'xepan_listing_'.$this->app->normalizeName(strtolower($old_model['name']));
 			$query = 'RENAME TABLE '.$old_table_name.' TO '.$table_name.';';
 		}
-
 		$this->app->db->dsql()->expr($query)->execute();
 	}
 
@@ -79,7 +76,16 @@ class Model_List extends \xepan\base\Model_Table{
 	}
 
 	function page_category_association($page){
-		$page->add('view')->set('Hello');
+		$model = $this->add('xepan\listing\Model_Category');
+		$model->addCondition('list_id',$this->id);
+
+		$crud = $page->add('xepan\hr\CRUD');
+		$crud->setModel($model);
+		if($crud->isEditing()){
+			$crud->form->getElement('parent_category_id')->getModel()->addCondition('list_id',$this->id);
+		}
+		$crud->grid->addQuickSearch(['name']);
+		$crud->grid->addPaginator(15);
 	}
 
 	function category_association(){

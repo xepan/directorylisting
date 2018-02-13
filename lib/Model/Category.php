@@ -3,7 +3,8 @@
 namespace xepan\listing;
 
 class Model_Category extends \xepan\base\Model_Table{
-	public $table='list_category';
+
+	public $table = 'list_category';
 	public $status = ['Active','Inactive'];
 	public $actions = [
 					'Active'=>['view','list_association','edit','delete','deactivate'],
@@ -24,11 +25,10 @@ class Model_Category extends \xepan\base\Model_Table{
 		$this->addField('custom_link');
 		$this->addField('is_website_display')->type('boolean')->defaultValue(true);
 		$this->addField('meta_title');
-		$this->addField('meta_description');
-		$this->addField('slug_url');
+		$this->addField('meta_description')->type('text');
+		$this->addField('slug_url')->hint('auto generated leave empty');
 		$this->addField('image')->display(['form'=>'xepan\base\ElImage']);
-
-
+		
 		// $this->addField('type')->defaultValue('');
 		
 		$this->is(['name|to_trim|required']);

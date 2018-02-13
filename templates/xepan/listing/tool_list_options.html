@@ -1,67 +1,265 @@
+<div id="{$_name}" style="display:none;" for-xepan-component="xepan/listing/Tool_List" class="xepan-tool-options" xepan-component-name="List Tool">
+  <div class="xepan-cms-group-panel clearfix">
+    <div id="collapse-xepan-listing-list" class="xepan-cms-tools-bar-panel row-fluid collapse in">
+      <div style="padding-top:0px;padding-bottom:0px;" class="panel-body">
+        <div id="xepan-cms-groups-panel" class="xepan-cms-groups-panel collapse">
+        </div>
+        <div class="xepan-cms-group-panel clearfix">
+          <div data-toggle="collapse" data-target="#{$_name}_showhide" aria-expanded="false" class="panel panel-heading panel-primary collapsed">
+              <span>Hide/ Show</span>
+              <i class="fa fa-chevron-down pull-right"></i>
+          </div>
+        </div>
+        <div id="#{$_name}_showhide" class="xepan-cms-tools-bar-panel row-fluid collapse in">
+            <table class="table table-condensed table-hover xepan-cms-tool-table">
 
-<div id="{$_name}" style="display:none" for-xepan-component="xepan/listing/Tool_List" class="xepan-tool-options">
-  <table class="table table-condensed table-hover xepan-cms-tool-table">
-    <tr class="xepan-tool-option">
-      <td class="xepan-tool-option-title">Show Post Count</td>
-      <td class="xepan-tool-option-value"> 
-        <select id="show_post_count" data-attr="show_post_count">
-          <option>true</option>
-          <option>false</option>
-        </select>
-      </td>
-    </tr>
-    <tr class="xepan-tool-option">
-      <td class="xepan-tool-option-title">Category Count</td>
-      <td class="xepan-tool-option-value"> 
-        <input id="category_count" data-attr="category_count"/>
-      </td>
-    </tr>
-    <tr class="xepan-tool-option">
-      <td class="xepan-tool-option-title">Category List Url</td>
-      <td class="xepan-tool-option-value"> 
-        <input id="redirect_page_url" data-attr="redirect_page_url"/>
-      </td>
-    </tr>
-    <tr class="xepan-tool-option">
-      <td class="xepan-tool-option-title">Post Detail Page</td>
-      <td class="xepan-tool-option-value"> 
-        <input id="post_detail_page" data-attr="post_detail_page"/>
-      </td>
-    </tr>
-    <tr class="xepan-tool-option">
-      <td class="xepan-tool-option-title">Order</td>
-      <td class="xepan-tool-option-value"> 
-        <select id="order" data-attr="order">
-          <option>true	</option>
-          <option>false </option>
-        </select>
-      </td>
-    </tr>
-    <tr class="xepan-tool-option">
-      <td class="xepan-tool-option-title">Group</td>
-      <td class="xepan-tool-option-value"> 
-        <input id="group" data-attr="group"/>
-      </td>
-    </tr>
-    <tr class="xepan-tool-option">
-      <td class="xepan-tool-option-title">Show Posts</td>
-      <td class="xepan-tool-option-value"> 
-        <select id="show_post" data-attr="show_post">
-          <option>true</option>
-          <option>false																									</option>
-        </select>
-      </td>
-    </tr>
-  </table>
-  <script>
-    $('#{$_name} [data-attr]').on('change',function(){
-    	$(current_selected_component).attr($(this).data('attr'),$(this).val());
-    });
-    
-    $('#{$_name}').on('show',function(event){
-    	$('#{$_name} [data-attr]').each(function(index,value){
-    		$(this).val($(current_selected_component).attr($(this).data('attr')));				
-    	});
-    })
-  </script>
+              <!-- Listing List -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Select Listing</td>
+                <td class="xepan-tool-option-value">
+                  <select id="xepan-listing-id" data-attr="listing_id" data-defaultvalue="0">
+                  </select>
+                </td>
+              </tr>
+
+              <!-- List Display Type -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Item Type</td>
+                <td class="xepan-tool-option-value">
+                  <select id="data_list" data-attr="show_data_list" data-defaultvalue="all">
+                    <option value="all">All</option>
+                    <option value="new">New</option>
+                    <option value="mostviewed">Most Viewed</option>
+                    <option value="featured">Featured</option>
+                  </select>
+                </td>
+              </tr>
+              <!-- show add button -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Show Add Button</td>
+                <td class="xepan-tool-option-value"> 
+                  <select id="list_add_button" data-attr="show_add_button" data-defaultvalue="1">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </td>
+              </tr>
+              <!-- show edit button -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Show Edit Button</td>
+                <td class="xepan-tool-option-value"> 
+                  <select id="list_edit_button" data-attr="show_edit_button" data-defaultvalue="1">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </td>
+              </tr>
+
+              <!-- show delete button -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Show Delete Button</td>
+                <td class="xepan-tool-option-value"> 
+                  <select id="list_delete_button" data-attr="show_delete_button" data-defaultvalue="1">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </td>
+              </tr>
+              <!-- show add button -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Show Qucik Search</td>
+                <td class="xepan-tool-option-value"> 
+                  <select id="show_quick_search" data-attr="show_quick_search" data-defaultvalue="1">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </td>
+              </tr>
+
+              <!-- show_mark_favourite_btn -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Show Favourite Button</td>
+                <td class="xepan-tool-option-value"> 
+                  <select id="show_mark_favourite_button" data-attr="show_mark_favourite_button" data-defaultvalue="1">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </td>
+              </tr>
+
+              <!-- is_filter_affected -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Filter Affected</td>
+                <td class="xepan-tool-option-value"> 
+                  <select id="is_filter_affected" data-attr="is_filter_affected" data-defaultvalue="1">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </td>
+              </tr>
+
+              <!-- show_public_fields -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Show Public Fields</td>
+                <td class="xepan-tool-option-value"> 
+                  <select id="show_public_fields" data-attr="show_public_fields" data-defaultvalue="1">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </td>
+              </tr>
+
+              <!-- show_private_fields -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Show Private Fields</td>
+                <td class="xepan-tool-option-value">
+                  <select id="show_private_fields" data-attr="show_private_fields" data-defaultvalue="onLogin">
+                    <option value="onLogin">Login Required</option>
+                    <option value="0">Never</option>
+                    <option value="always">Always</option>
+                  </select>
+                </td>
+              </tr>
+
+              <!-- show_premium_fields -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Show Premium Fields</td>
+                <td class="xepan-tool-option-value">
+                  <select id="show_premium_fields" data-attr="show_premium_fields" data-defaultvalue="onPremiumUser">
+                    <option value="0">Never</option>
+                    <option value="always">Always</option>
+                    <option value="onLogin">Login Required</option>
+                    <option value="onPremiumUser">Premium User</option>
+                  </select>
+                </td>
+              </tr>
+
+              <!-- status_to_show -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Status to Show</td>
+                <td class="xepan-tool-option-value"> 
+                  <select id="listing_status_to_show" style="width:100px;" multiple="" data-attr="status_to_show" multiselect="multiselect" class="chosen-select listing-list-option-status-multiselect"></select>
+                  </select>
+                </td>
+              </tr>
+
+              <!-- status_to_show -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Categories</td>
+                <td class="xepan-tool-option-value">
+                  <select id="list_of_categories" style="width:100px;" multiple="" data-attr="list_of_categories" multiselect="multiselect" class="chosen-select listing-list-option-category-multiselect"></select>
+                  </select>
+                </td>
+              </tr>
+
+              <!-- Show Detail Button -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Show Detail Button</td>
+                <td class="xepan-tool-option-value">
+                  <select id="show_detail_button" data-attr="show_detail_button" data-defaultvalue="Yes">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </td>
+              </tr>
+
+              <!-- status_to_show -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Display Sequence</td>
+                <td class="xepan-tool-option-value">
+                  <select id="display_sequence" data-attr="display_sequence" data-defaultvalue="desc">
+                    <option value="lifo">Recently Added First</option>
+                    <option value="fifo">First Added First</option>
+                    <option value="alphabetasc">Alphabet Ascending </option>
+                    <option value="alphabetdesc">Alphabet Descending </option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-title">Custom Template</td>
+                <td class="xepan-tool-option-value">
+                  <input data-attr="custom_template"/>
+                </td>
+              </tr>
+            </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" type="text/css" href="vendor/xepan/commerce/templates/css/chosen.css"/>
+  <script src="vendor/xepan/commerce/templates/js/chosen.jquery.js"></script>
+
+    <script>
+      $('#{$_name} [data-attr]').on('change',function(){
+        $(current_selected_component).attr($(this).data('attr'),$(this).val());
+        // show or hide the toggle class
+        if($(this).data('toggleclass')){
+          var value = $(this).data('togglevalue').toString();
+          if($(this).val() === value){
+            $($(this).data('toggleclass')).show();
+          }else
+            $($(this).data('toggleclass')).hide();
+        }
+      });
+      
+      $('#{$_name} #xepan-listing-id').on('change',function(){
+        // list status
+        $.ajax({
+          url: 'index.php?page=xepan_listing_getrecord_listingstatus',
+          type: 'GET',
+          data: {'listing_id':$(this).val() },
+          success: function ( data ){
+            $('#{$_name} #listing_status_to_show').html(data);
+            $('#{$_name} #listing_status_to_show').chosen();
+            $('#{$_name} #listing_status_to_show').chosen({allow_single_deselect: true });
+          }
+        });
+
+        // list status
+        $.ajax({
+          url: 'index.php?page=xepan_listing_getrecord_listingcategory',
+          type: 'GET',
+          data: {'listing_id':$(this).val() },
+          success: function ( data ){
+            $('#{$_name} #list_of_categories').html(data);
+            $('#{$_name} #list_of_categories').chosen();
+            $('#{$_name} #list_of_categories').chosen({allow_single_deselect: true });
+          }
+        });
+
+        // $('.chosen-choices').css('width','120px');
+      }); 
+
+      $('#{$_name}').on('show',function(event){
+
+        // all listing
+        $.ajax({
+          url: 'index.php?page=xepan_listing_getrecord_list',
+          type: 'GET',
+          data: { },
+          success: function ( data ){
+            $('#{$_name} #xepan-listing-id').html(data);
+          }
+        });
+
+        $('#{$_name} [data-attr]').each(function(index,value){
+          // setting up default value if no option selected
+          var default_value = $(this).attr('data-defaultvalue');
+          if($(current_selected_component).attr($(this).data('attr')))
+            default_value = $(current_selected_component).attr($(this).data('attr'));
+          
+          $(this).val(default_value);
+        });
+        
+        //- chosen multiselect options
+        if(typeof $(current_selected_component).attr('show_item_of_category') === 'undefined' ){
+          $("#{$_name} .multiselect").val("\{\}").trigger("chosen:updated");
+        }else{
+          var str = $(current_selected_component).attr('show_item_of_category');
+          $("#{$_name} .multiselect").val(str.split(',')).trigger("chosen:updated");
+        }
+      });
+    </script>
 </div>
