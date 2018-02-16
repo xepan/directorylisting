@@ -1,78 +1,87 @@
 
 <div id="{$_name}" style="display:none" for-xepan-component="xepan/listing/Tool_ListDetail" class="xepan-tool-options">
   <table class="table table-condensed table-hover xepan-cms-tool-table">
+    <!-- Listing List -->
     <tr class="xepan-tool-option">
-      <td class="xepan-tool-option-title">Show List Details</td>
-      <td class="xepan-tool-option-value"> 
-        <select id="show_list_details" data-attr="show_list_details">
-          <option>true</option>
-          <option>false</option>
+      <td class="xepan-tool-option-title">Select Listing</td>
+      <td class="xepan-tool-option-value">
+        <select id="xepan-listing-id" data-attr="listing_id" data-defaultvalue="0">
         </select>
       </td>
     </tr>
     <tr class="xepan-tool-option">
       <td class="xepan-tool-option-title">Show Public Fields</td>
       <td class="xepan-tool-option-value"> 
-        <select id="show_public _fields" data-attr="show_public_fields">
-          <option>true</option>
-          <option>false</option>
+        <select id="show_public_fields" data-attr="show_public_fields" data-defaultvalue="1">
+          <option value="1">Yes</option>
+          <option value="0">No</option>
         </select>
       </td>
     </tr>
     <tr class="xepan-tool-option">
       <td class="xepan-tool-option-title">Show Private Fields</td>
       <td class="xepan-tool-option-value"> 
-        <select id="show_private_fields" data-attr="show_private_fields">
-          <option>true</option>
-          <option>false</option>
+        <select id="show_private_fields" data-attr="show_private_fields" data-defaultvalue="onLogin">
+          <option value="onLogin">Login Required</option>
+          <option value="0">Never</option>
+          <option value="always">Always</option>
         </select>
       </td>
     </tr>
     <tr class="xepan-tool-option">
       <td class="xepan-tool-option-title">Show Protected Fields</td>
       <td class="xepan-tool-option-value"> 
-        <select id="show_protected _fields" data-attr="show_protected_fields">
-          <option>true</option>
-          <option>false</option>
+        <select id="show_protected_fields" data-attr="show_protected_fields" data-defaultvalue="onPremiumUser">
+          <option value="0">Never</option>
+          <option value="always">Always</option>
+          <option value="onLogin">Login Required</option>
+          <option value="onPremiumUser">Premium User</option>       
         </select>
       </td>
     </tr>
     <tr class="xepan-tool-option">
-      <td class="xepan-tool-option-title">Allow Public Message</td>
+      <td class="xepan-tool-option-title">Allow Private Message</td>
       <td class="xepan-tool-option-value"> 
-        <select id="allow_public _message" data-attr="allow_public_message">
-          <option>true</option>
-          <option>false</option>
+        <select id="allow_private_message" data-attr="allow_private_message" data-defaultvalue="1">
+          <option value="1">Yes</option>
+          <option value="0">No</option>
         </select>
       </td>
     </tr>
     <tr class="xepan-tool-option">
-      <td class="xepan-tool-option-title">Allow Views</td>
+      <td class="xepan-tool-option-title">Allow Reviews</td>
       <td class="xepan-tool-option-value"> 
-        <select id="allow_views" data-attr="allow_views">
-          <option>true</option>
-          <option>false</option>
+        <select id="allow_review" data-attr="allow_review" data-defaultvalue="1">
+          <option value="1">Yes</option>
+          <option value="0">No</option>
         </select>
       </td>
     </tr>
     <tr class="xepan-tool-option">
       <td class="xepan-tool-option-title">Show Ratings</td>
       <td class="xepan-tool-option-value"> 
-        <select id="show_ratings" data-attr="rating">
-          <option>true</option>
-          <option>false</option>
+        <select id="allow_rating" data-attr="allow_rating" data-defaultvalue="1">
+          <option value="1">Yes</option>
+          <option value="0">No</option>
         </select>
       </td>
     </tr>
     <tr class="xepan-tool-option">
       <td class="xepan-tool-option-title">Show Social Share</td>
-      <td class="xepan-tool-option-value"> 
-        <select id="show_social_share" data-attr="social_share">
-          <option>true</option>
-          <option>false</option>
+      <td class="xepan-tool-option-value">
+        <select id="show_social_share" data-attr="show_social_share" data-defaultvalue="1">
+          <option value="1">Yes</option>
+          <option value="0">No</option>
         </select>
       </td>
     </tr>
+    <tr class="xepan-tool-option">
+      <td class="xepan-tool-option-title">Custom Template</td>
+      <td class="xepan-tool-option-value">
+        <input data-attr="custom_template"/>
+      </td>
+    </tr>
+
   </table>
   <script>
     $('#{$_name} [data-attr]').on('change',function(){
@@ -80,9 +89,24 @@
     });
     
     $('#{$_name}').on('show',function(event){
-    	$('#{$_name} [data-attr]').each(function(index,value){
-    		$(this).val($(current_selected_component).attr($(this).data('attr')));				
-    	});
-    })
+        // all listing
+        $.ajax({
+          url: 'index.php?page=xepan_listing_getrecord_list',
+          type: 'GET',
+          data: { },
+          success: function ( data ){
+            $('#{$_name} #xepan-listing-id').html(data);
+          }
+        });
+
+        $('#{$_name} [data-attr]').each(function(index,value){
+          // setting up default value if no option selected
+          var default_value = $(this).attr('data-defaultvalue');
+          if($(current_selected_component).attr($(this).data('attr')))
+            default_value = $(current_selected_component).attr($(this).data('attr'));
+          
+          $(this).val(default_value);
+        });
+      });
   </script>
 </div>

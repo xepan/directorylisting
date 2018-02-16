@@ -28,8 +28,8 @@ class Tool_List extends \xepan\cms\View_Tool{
 
 		if($this->owner instanceof \AbstractController) return;
 
-		if($this->requiredOptionMessage()){
-			$this->add('View_Warning')->set($message);
+		if($message = $this->requiredOptionMessage()){
+			$this->add('View_Warning')->addClass('alert alert-warning')->set($message);
 			return;
 		}
 
