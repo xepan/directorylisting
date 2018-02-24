@@ -59,7 +59,7 @@ class View_CategoryLister extends \CompleteLister{
 	}
 
 	function defaultTemplate(){
-		return ['view/listing/category/'.$this->options['template']];
+		return ['view/tool/listing/category/'.$this->options['template']];
 	}
 
 	// function addToolCondition_row_show_item_count($value,$l){

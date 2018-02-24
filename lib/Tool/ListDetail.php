@@ -12,7 +12,7 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 					'allow_review'=>true,
 					'allow_rating'=>true,
 					'show_social_share'=>false,
-					'custom_template'=>"",
+					'custom_template'=>"collapse",
 				];
 	
 	function init(){
