@@ -59,12 +59,42 @@ class Model_ListData extends \xepan\base\Model_Table{
 				$validation_array[] = [$field_db_column_name."|required"];
 			}
 
-			if($field['is_public']) $this->public_fields[$field_db_column_name] = $field['name'];
-			if($field['is_private']) $this->private_fields[$field_db_column_name] = $field['name'];
-			if($field['is_premium']) $this->premium_fields[$field_db_column_name] = $field['name'];
-			if($field['is_filterable']) $this->filterable_fields[$field_db_column_name] = $field['name'];
-			if($field['is_changable']) $this->changable_fields[$field_db_column_name] = $field['name'];
-			if($field['is_moderate']) $this->moderate_fields[$field_db_column_name] = $field['name'];
+			if($field['is_public']) {
+				$this->public_fields[$field_db_column_name] = $field['name'];
+				if(strpos($field_db_column_name, "_id") !==false){
+					$this->public_fields[str_replace("_id", '', $field_db_column_name)] = $field['name'];
+				}
+			}
+			if($field['is_private']) {
+				$this->private_fields[$field_db_column_name] = $field['name'];
+				if(strpos($field_db_column_name, "_id") !==false){
+					$this->private_fields[str_replace("_id", '', $field_db_column_name)] = $field['name'];
+				}
+			}
+			if($field['is_premium']) {
+				$this->premium_fields[$field_db_column_name] = $field['name'];
+				if(strpos($field_db_column_name, "_id") !==false){
+					$this->premium_fields[str_replace("_id", '', $field_db_column_name)] = $field['name'];
+				}	
+			}
+			if($field['is_filterable']) {
+				$this->filterable_fields[$field_db_column_name] = $field['name'];
+				if(strpos($field_db_column_name, "_id") !==false){
+					$this->filterable_fields[str_replace("_id", '', $field_db_column_name)] = $field['name'];
+				}
+			}
+			if($field['is_changable']) {
+				$this->changable_fields[$field_db_column_name] = $field['name'];
+				if(strpos($field_db_column_name, "_id") !==false){
+					$this->changable_fields[str_replace("_id", '', $field_db_column_name)] = $field['name'];
+				}
+			}
+			if($field['is_moderate']) {
+				$this->moderate_fields[$field_db_column_name] = $field['name'];
+				if(strpos($field_db_column_name, "_id") !==false){
+					$this->moderate_fields[str_replace("_id", '', $field_db_column_name)] = $field['name'];
+				}
+			}
 		}
 
 		// predefined fields

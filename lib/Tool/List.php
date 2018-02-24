@@ -41,16 +41,24 @@ class Tool_List extends \xepan\cms\View_Tool{
 		$fields = $this->getDisplayFields();
 
 		if($template = $this->getCustomTemplatePath()){
-			$this->lister = $crud = $this->add('xepan\base\CRUD',['allow_add'=>$this->options['show_add_button'],'allow_edit'=>$this->options['show_edit_button'],'allow_del'=>$this->options['show_delete_button']],null,$template);
+			$this->lister = $crud = $this->add('xepan\base\CRUD',['allow_add'=>$this->options['show_add_button'],'allow_edit'=>$this->options['show_edit_button'],'allow_del'=>$this->options['show_delete_button'],'grid_options'=>['add_sno'=>false]],null,['view/tool/listing/'.$this->options['custom_template']]);
 		}else{
 			if($this->options['custom_template'])
-				$this->add('View')->set('List Template not found');
-			$this->lister = $crud = $this->add('xepan\base\CRUD',['allow_add'=>$this->options['show_add_button'],'allow_edit'=>$this->options['show_edit_button'],'allow_del'=>$this->options['show_delete_button']]);
+				$this->add('View')->set('List Template not found at : '.$this->getTemplateBasePath())->addClass('alert alert-info');
+			$this->lister = $crud = $this->add('xepan\base\CRUD',['allow_add'=>$this->options['show_add_button'],'allow_edit'=>$this->options['show_edit_button'],'allow_del'=>$this->options['show_delete_button'],'grid_options'=>['add_sno'=>false]]);
 		}
-
+		
 		$crud->setModel($listdata_model,array_keys($fields));
 
 		$crud->add('xepan\cms\Controller_Tool_Optionhelper',['options'=>$this->options,'model'=>$listdata_model]);
+	}
+
+	function getTemplate(){
+		return $this->lister->grid->template;
+	}
+
+	function getTemplateBasePath(){
+		return $path = getcwd()."/websites/".$this->app->current_website_name."/www/view/tool/listing/".$this->options['custom_template'].".html";
 	}
 
 	function getCustomTemplatePath(){
@@ -108,17 +116,17 @@ class Tool_List extends \xepan\cms\View_Tool{
 	}
 
 	function addToolCondition_show_data_list($value,$model){		
-		switch ($value) {
-			case 'new':
-				$model->addCondition('is_new',true);
-				break;
-			case 'mostviewed':
-				$model->addCondition('is_mostviewed',true);
-				break;
-			case 'featured':
-				$model->addCondition('is_feature',true);
-				break;
-		}
+		// switch ($value) {
+		// 	case 'new':
+		// 		$model->addCondition('is_new',true);
+		// 		break;
+		// 	case 'mostviewed':
+		// 		$model->addCondition('is_mostviewed',true);
+		// 		break;
+		// 	case 'featured':
+		// 		$model->addCondition('is_feature',true);
+		// 		break;
+		// }
 	}
 
 	function addToolCondition_show_public_fields($value,$model){
@@ -144,9 +152,9 @@ class Tool_List extends \xepan\cms\View_Tool{
 		return false;		
 	}
 
-	function getTemplate(){
-		return $this->lister->template;
-	}
+	// function getTemplate(){
+	// 	return $this->lister->template;
+	// }
 
 	function getTemplateFile(){
 		return $this->lister->template->origin_filename;

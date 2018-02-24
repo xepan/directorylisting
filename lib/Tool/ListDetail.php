@@ -39,6 +39,7 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 			return;
 		}
 
+		// $this->app->print_r($this->listdata_model->data);
 		$this->setModelValue($this->listdata_model);
 		// $this->setModel($this->listdata_model);
 	}
@@ -65,6 +66,7 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 				$this->template->tryDel($normalize_name."_wrapper");
 			}
 		}
+		
 	}
 
 	function requiredOptionMessage(){
@@ -81,6 +83,6 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 			return parent::defaultTemplate();
 		}
 
-		return ['view/listing/listdetail/'.$layout];
+		return ['view/tool/listing/listdetail/'.$layout];
 	}
 }
