@@ -77,7 +77,12 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 	}
 
 	function defaultTemplate(){
+
+		if($message = $this->requiredOptionMessage()){
+			return parent::defaultTemplate();
+		}
 		
+
 		$layout = trim($this->options['custom_template']);
 		if(!$layout){
 			return parent::defaultTemplate();
