@@ -20,7 +20,6 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'display_sequence'=>'desc', //either desc or asc
 				'show_detail_button'=>true, // true, false
 				'custom_template'=>'', // define your custom templates
-				// 'field_redirect_to_list_detail'=>null, //comma seperated multiple fields
 			];
 	
 	function init(){
