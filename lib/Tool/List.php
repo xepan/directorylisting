@@ -27,6 +27,8 @@ class Tool_List extends \xepan\cms\View_Tool{
 
 		if($this->owner instanceof \AbstractController) return;
 
+		$this->js('reload')->reload();
+
 		if($message = $this->requiredOptionMessage()){
 			$this->add('View_Warning')->addClass('alert alert-warning')->set($message);
 			return;
@@ -46,6 +48,8 @@ class Tool_List extends \xepan\cms\View_Tool{
 				$this->add('View')->set('List Template not found at : '.$this->getTemplateBasePath())->addClass('alert alert-info');
 			$this->lister = $crud = $this->add('xepan\base\CRUD',['allow_add'=>$this->options['show_add_button'],'allow_edit'=>$this->options['show_edit_button'],'allow_del'=>$this->options['show_delete_button'],'grid_options'=>['add_sno'=>false]]);
 		}
+
+		$this->applyFilters();
 		
 		$crud->setModel($listdata_model,array_keys($fields));
 
@@ -149,6 +153,15 @@ class Tool_List extends \xepan\cms\View_Tool{
 		if(!$this->options['listing_id']) return "please select listing ...";
 		
 		return false;		
+	}
+
+	function applyFilters(){
+		$existing_filter_data = $this->app->recall('listing_fiter_data',[]);
+		$my_existing_data = $existing_filter_data[$this->listing_model->id];
+
+		foreach ($my_existing_data as $condition) {
+			$this->listdata_model->addCondition($condition['filter_effected_field'],$condition['operator'],$condition['value']);
+		}
 	}
 
 	// function getTemplate(){

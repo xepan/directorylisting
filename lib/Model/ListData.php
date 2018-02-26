@@ -41,8 +41,11 @@ class Model_ListData extends \xepan\base\Model_Table{
 			if($field['field_type'] == "Captcha") continue;
 
 			$field_db_column_name = $field->dbColumnName();
+
 			if($field['field_type'] == "Upload"){
 				$f = $this->add('xepan\filestore\Field_File',$field_db_column_name);
+			}elseif($field['field_type'] == "Expression"){
+				$f= $this->addExpression($field_db_column_name)->set($field['default_value']);
 			}else{
 				$f = $this->addField($field_db_column_name);
 				$f->type($field->modelFieldType());

@@ -55,5 +55,17 @@ class page_getrecord extends \Page {
 		exit;	
 	}
 
+	function page_listfilter(){
+		$model = $this->add('xepan\listing\Model_Filter');
+		$model->addCondition('list_id',$_GET['listing_id']);
+		$option = "<option value='0'>Please Select </option>";
+		foreach ($model as $fil){
+			$option .= "<option value='".$fil['id']."'>".$fil['name']."</option>";
+		}
+
+		echo $option;
+		exit;
+	}
+
 }
 

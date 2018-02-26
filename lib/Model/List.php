@@ -6,8 +6,8 @@ class Model_List extends \xepan\base\Model_Table{
 	public $table='list';
 	public $status = ['Published','UnPublished'];
 	public $actions = [
-					'Active'=>['view','fields','data','manage_layouts','category_association','edit','delete','deactivate'],
-					'Inactive'=>['view','fields','data','category_association','edit','delete','activate']
+					'Active'=>['view','fields','data','filters','manage_layouts','category_association','edit','delete','deactivate'],
+					'Inactive'=>['view','fields','data','filters','category_association','edit','delete','activate']
 					];
 
 	public $acl_type = "Listing\List";
@@ -91,6 +91,17 @@ class Model_List extends \xepan\base\Model_Table{
 	function category_association(){
 
 	}
+
+	function filters(){
+		$this->app->redirect($this->app->url('xepan_listing_filter',['list_id'=>$this->id]));
+	} 
+	// function page_filters($page){
+
+	// 	$model = $this->add('xepan\listing\Model_Filter');
+	// 	$crud = $page->add('xepan\hr\CRUD');
+	// 	$crud->setModel($model);
+	// 	$crud->grid->addPaginator(10);
+	// }
 
 	function deactivate(){
 		$this['status'] = 'Inactive';

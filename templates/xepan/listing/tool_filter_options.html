@@ -10,6 +10,15 @@
         </td>
       </tr>
 
+      <!-- status_to_show -->
+      <tr class="xepan-tool-option">
+        <td class="xepan-tool-option-value"> 
+          <div class="xepan-tool-option-title">Select Filter</div>
+          <select id="listing_filter_to_show" data-attr="list_filter_id"></select>
+        </td>
+      </tr>
+
+
   </table>
   <script>
     $('#{$_name} [data-attr]').on('change',function(){
@@ -30,6 +39,18 @@
     	$('#{$_name} [data-attr]').each(function(index,value){
     		$(this).val($(current_selected_component).attr($(this).data('attr')));				
     	});
-    })
+    });
+
+    $('#{$_name} #xepan-listing-id').on('change',function(){
+        $.ajax({
+          url: 'index.php?page=xepan_listing_getrecord_listfilter',
+          type: 'GET',
+          data: {'listing_id':$(this).val()},
+          success: function ( data ){
+            $('#{$_name} #listing_filter_to_show').html(data);
+          }
+      });
+    });
+
   </script>
 </div>

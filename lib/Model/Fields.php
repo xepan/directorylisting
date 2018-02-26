@@ -32,7 +32,8 @@ class Model_Fields extends \xepan\base\Model_Table{
 								'DatePicker'=>"DatePicker",
 								'Upload'=>"Upload",
 								'TimePicker'=>"TimePicker",
-								"Captcha"=>'Captcha'
+								"Captcha"=>'Captcha',
+								"Expression"=>'Expression'
 							)
 						);
 		$this->addField('default_value');
