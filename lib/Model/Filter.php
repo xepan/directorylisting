@@ -4,11 +4,10 @@ namespace xepan\listing;
 
 class Model_Filter extends \xepan\base\Model_Table{
 	public $table = 'list_filter';
-	public $status = ['Active','Inactive'];
+	public $status = ['All'];
 	public $actions = [
-					'Active'=>['view','fields','edit','delete','deactivate'],
-					'Inactive'=>['view','fields','edit','delete','activate']
-					];
+					'All'=>['view','fields','edit','delete']
+				];
 	public $acl_type = "Listing\ListFilter";
 
 	function init(){
@@ -16,7 +15,8 @@ class Model_Filter extends \xepan\base\Model_Table{
 
 		$this->hasOne('xepan\listing\Model_List','list_id');
 		$this->addField('name');
-		$this->addField('status')->enum(['Active','InActive'])->defaultValue('Active');
+		$this->addField('layout')->type('text');
+		// $this->addField('status')->enum(['All']);
 
 		$this->is(['name|to_trim|required']);
 
@@ -97,4 +97,13 @@ class Model_Filter extends \xepan\base\Model_Table{
 		$crud->form->add('View')->set(implode(", ",$this->getDataModel()->getActualFields()));
 	}
 	
+	function getLayoutArray(){
+		$arr = [];
+		$lines = explode(",", $this['layout']);
+		foreach ($lines as $line) {
+			$seg = explode("=>", $line);
+			$arr[trim(str_replace("'", "", $seg[0]))] = trim(str_replace("'", "", $seg[1]));
+		}
+		return $arr;
+	}	
 }

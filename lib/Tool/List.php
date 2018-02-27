@@ -50,7 +50,10 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$this->lister = $crud = $this->add('xepan\base\CRUD',['allow_add'=>$this->options['show_add_button'],'allow_edit'=>$this->options['show_edit_button'],'allow_del'=>$this->options['show_delete_button'],'grid_options'=>['add_sno'=>false]]);
 		}
 
-		$this->applyFilters();
+		if($this->options['is_filter_affected']){
+			$this->applyFilters();
+		}
+		
 		if($this->options['list_data_set_id']){
 			$this->applyListDataSetCondition();
 		}

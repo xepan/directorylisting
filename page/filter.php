@@ -16,6 +16,11 @@ class page_filter extends \xepan\base\Page {
 		$crud = $this->add('xepan\hr\CRUD');
 		$crud->setModel($model);
 		$crud->grid->addPaginator(10);
+
+		if($crud->isEditing()){
+			$form = $crud->form;
+			$form->add('View')->set(implode(", ",array_column($model->ref('xepan\listing\Model_FilterField')->getRows(), 'name')));
+		}
 	}
 }
 

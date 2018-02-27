@@ -41,6 +41,12 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 
 		$form = $this->add('Form');
 
+		if(trim($filter['layout'])){
+			$form->add('xepan\base\Controller_FLC')
+				->addContentSpot()
+				->layout($filter->getLayoutArray());
+		}
+
 		foreach ($filter_field_model as $field) {
 			$field_name = $field['name'];
 			$f = $form->addField($field['field_type'],$field_name,$field['name']);
