@@ -6,8 +6,8 @@ class Model_List extends \xepan\base\Model_Table{
 	public $table='list';
 	public $status = ['Published','UnPublished'];
 	public $actions = [
-					'Active'=>['view','fields','data','filters','list_data_set','manage_layouts','category','edit','delete','deactivate'],
-					'Inactive'=>['view','fields','data','filters','list_data_set','category','edit','delete','activate']
+					'Active'=>['view','fields','data','filters','list_data_set','manage_layouts','manage_status_activity','category','edit','delete','deactivate'],
+					'Inactive'=>['view','fields','data','filters','list_data_set','manage_status_activity','category','edit','delete','activate']
 					];
 
 	public $acl_type = "Listing\List";
@@ -164,5 +164,18 @@ class Model_List extends \xepan\base\Model_Table{
 		
 	function list_data_set(){
 		$this->app->redirect($this->app->url('xepan_listing_listdataset',['list_id'=>$this->id]));
+	}
+
+	function page_manage_status_activity($page){
+		$model = $this->add('xepan\listing\Model_ListingStatusActivity');
+		$model->addCondition('list_id',$this->id);
+		$crud = $page->add('xepan\hr\CRUD');
+		$crud->setModel($model);
+		
+		if($crud->isEditing()){
+			$form = $crud->form;
+			$t = explode(',', $this['list_data_status']);
+			$form->getElement('on_status')->setValueList(array_combine($t, $t));
+		}
 	}
 }	

@@ -172,4 +172,5 @@ class Model_ListData extends \xepan\base\Model_Table{
 	function listModel(){
 		return $this->listing;
 	}
+
 }

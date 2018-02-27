@@ -25,6 +25,7 @@ class page_listdata extends \xepan\base\Page {
 		}
 		
 		$crud->setModel($m);
+
 		if($crud->isEditing('edit')){			
 			$crud->form->getElement('categories')->set($crud->form->model->getAssociatedCategories());
 		}
