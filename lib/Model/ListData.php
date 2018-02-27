@@ -31,8 +31,7 @@ class Model_ListData extends \xepan\base\Model_Table{
 		}elseif(is_string($this->listing)){
 			$this->listing = $this->add('xepan\listing\Model_List')->loadBy('name',$this->listing);
 		}else{
-			var_dump($_GET['listid']);
-			throw new \Exception("list must defined");
+			// throw new \Exception("list must defined");
 		}
 
 		$this->acl_type = $this->table = $this->listing->getTableName();
@@ -126,4 +125,11 @@ class Model_ListData extends \xepan\base\Model_Table{
 		// $form->addField('DropDown','status')->setListValue(['']);
 
 	}
+
+	// ACL will call it and listing must be passed again to be exact same newInsatnce of current model
+	function newInstance($properties = null)
+    {
+        return $this->owner->add(get_class($this), ['listing'=>$this->listing]);
+    }
+
 }
