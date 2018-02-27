@@ -15,6 +15,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'show_private_fields'=>'onLogin', //0,always,onLogin
 				'show_premium_fields'=>'onPremiumUser', //0,always,onLogin, onPremiumUser
 				'show_mark_favourite_button'=>true, // true, false
+				'show_list_data_created_by_login_user'=>false,
 				'status_to_show'=>null, //comma seperated multiple values
 				'is_filter_affected'=>true, // true, false
 				'list_of_categories'=>null, // comma seperated multiple values
@@ -56,6 +57,13 @@ class Tool_List extends \xepan\cms\View_Tool{
 		
 		if($this->options['list_data_set_id']){
 			$this->applyListDataSetCondition();
+		}
+
+		if($this->options['show_list_data_created_by_login_user']){
+			$contact = $this->add('xepan\base\Model_Contact')
+						->addCondition('user_id',$this->app->auth->model->id)
+						->tryLoadAny();
+			$listdata_model->addCondition('created_by_id',$contact->id);
 		}
 		
 		$crud->setModel($listdata_model,array_keys($fields));
