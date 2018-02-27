@@ -117,12 +117,24 @@ class Model_ListData extends \xepan\base\Model_Table{
 		$this->addField('status');
 
 		// setting up status dropdown to status field
-		$this->getElement('status')->enum(explode(",",$this->listing['list_data_status']));
+		$ts = explode(",",$this->listing['list_data_status']);
+		$this->getElement('status')->enum(array_combine($ts,$ts))->defaultValue($ts[0]);
 	}
 
 	function page_change_status($page){
+		$ts = explode(",",$this->listing['list_data_status']);
+
 		$form = $page->add('Form');
-		// $form->addField('DropDown','status')->setListValue(['']);
+		$form->addField('DropDown','status')
+			->setValueList(array_combine($ts,$ts))
+			->set($this['status']);
+
+		$form->addSubmit('Update');
+		if($form->isSubmitted()){
+			$this['status'] = $form['status'];
+			$this->save();
+			return true;
+		}
 
 	}
 
