@@ -39,7 +39,7 @@ class Model_ListData extends \xepan\base\Model_Table{
 		$this->status = $status = explode(",",$this->listing['list_data_status']);
 		// actions
 		foreach ($status as $key => $value) {
-			$this->actions[$value] = ['view','change_status','edit','delete'];
+			$this->actions[$value] = ['view','change_status','execute_action','edit','delete'];
 		}
 		
 		parent::init();
@@ -119,6 +119,13 @@ class Model_ListData extends \xepan\base\Model_Table{
 		// setting up status dropdown to status field
 		$ts = explode(",",$this->listing['list_data_status']);
 		$this->getElement('status')->enum(array_combine($ts,$ts))->defaultValue($ts[0]);
+		
+		$this->addHook('beforeSave',[$this,"executeStatusActivity"]);
+	}
+
+	function executeStatusActivity(){
+		if($this->isDirty('status'))
+			$this->shootStatusAction($this['status']);
 	}
 
 	function page_change_status($page){
@@ -166,6 +173,99 @@ class Model_ListData extends \xepan\base\Model_Table{
 			$asso['list_data_id'] = $this->id;
 			$asso['list_category_id'] = $cat_id;
 			$asso->save();
+		}
+	}
+
+	function page_execute_action($page){
+		$ts = explode(",",$this->listing['list_data_status']);
+
+		$form = $page->add('Form');
+		$form->addField('DropDown','status')
+			->setValueList(array_combine($ts,$ts))
+			->set($this['status']);
+
+		$form->addSubmit('Update');
+		if($form->isSubmitted()){
+			$this->shootStatusAction($form['status']);
+			return true;
+		}
+	}
+
+	function shootStatusAction($status=null){
+		if(!$status) $status=$this['status'];
+		$actions  = $this->add('xepan\listing\Model_ListingStatusActivity');
+		$actions->addCondition('list_id',$this->listing->id);
+		$actions->addCondition('on_status',$status);
+		$actions->addCondition('status','Active');
+
+		foreach ($actions as $act) {
+			$creator = $this->ref('created_by_id');
+			$email_array = [];
+			$phone_array = [];
+			if($act['email_send_to_creator'] && $creator->loaded()) $email_array = array_merge($email_array,explode("<br/>", $creator['emails_str']));
+			if($act['sms_send_to_creator'] && $creator->loaded()) $phone_array = array_merge($phone_array,explode("<br/>", $creator['contacts_str']));
+
+			foreach (explode(",", $act['email_send_to_list_data_fields']) as $f) {
+				if(filter_var($this[$f], FILTER_VALIDATE_EMAIL)) $email_array[] = $this[$f];
+			}
+
+			foreach (explode(",", $act['sms_send_to_list_data_fields']) as $f) {
+				$phone_array[] = $this[$f];
+			}
+
+			$email_array = array_merge($email_array,explode(",", $act['email_send_to_custom_email_ids']));
+			$phone_array = array_merge($phone_array,explode(",", $act['sms_send_to_custom_phone_numbers']));
+
+			$data_array = [];
+
+			if($creator->loaded()){
+				foreach ($creator->getActualFields() as $f) {
+					$data_array['creator_'.$f]=$creator[$f];
+				}
+			}
+
+			$data_array = array_merge($data_array,$this->data);
+
+			if(count($email_array)){
+
+				$email_settings = $this->add('xepan\communication\Model_Communication_DefaultEmailSetting')->tryLoadAny();
+				$mail = $this->add('xepan\communication\Model_Communication_Email');
+
+				$email_subject = $act['email_subject'];
+				$email_body = $act['email_body'];
+				
+				$temp = $this->add('GiTemplate');
+				$temp->loadTemplateFromString($email_body);
+
+				$subject_temp = $this->add('GiTemplate');
+				$subject_temp->loadTemplateFromString($email_subject);
+				$subject_v=$this->add('View',null,null,$subject_temp);
+				$subject_v->template->trySet($data_array);
+
+				$temp = $this->add('GiTemplate');
+				$temp->loadTemplateFromString($email_body);
+				$body_v=$this->add('View',null,null,$temp);
+				$body_v->template->trySet($data_array);					
+
+				$mail->setfrom($email_settings['from_email'],$email_settings['from_name']);
+
+				foreach ($email_array as $email_id) {
+					$mail->addTo($email_id);
+				}
+				$mail->setSubject($subject_v->getHtml());
+				$mail->setBody($body_v->getHtml());
+				$mail->send($email_settings);
+			}
+
+			if(count($phone_array) && trim($act['sms_content'])){
+				$temp = $this->add('GiTemplate');
+				$temp->loadTemplateFromString(trim($act['sms_content']));
+				$msg = $this->add('View',null,null,$temp);
+				$msg->template->trySet($data_array);
+				foreach ($phone_array as $number) {
+					$this->add('xepan\communication\Controller_Sms')->sendMessage($number,$msg->getHtml());
+				}
+			}
 		}
 	}
 
