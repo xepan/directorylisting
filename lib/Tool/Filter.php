@@ -6,7 +6,7 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 	public $options = [
 			'listing_id'=>null,
 			'list_filter_id'=>null,
-			'reload_class'=>'.mylist',
+			'reload_class'=>null,
 			'result_page'=>null,
 		];
 	public $list_model;
@@ -91,6 +91,7 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 			$existing_filter_data[$this->list_model->id]= $this->filter_data_list;
 
 			$this->app->memorize('listing_fiter_data',$existing_filter_data);
+			
 
 			if($this->options['result_page']) $this->app->redirect($this->app->url($this->options['result_page']));
 			if($this->options['reload_class']) $this->js()->_selector($this->options['reload_class'].'>*')->trigger('reload')->execute();
