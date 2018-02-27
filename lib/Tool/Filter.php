@@ -6,7 +6,7 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 	public $options = [
 			'listing_id'=>null,
 			'list_filter_id'=>null,
-			'reload_class'=>null,
+			'reload_class'=>'.mylist',
 			'result_page'=>null,
 		];
 	public $list_model;
@@ -56,14 +56,16 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 				}
 				$f->setValueList($value_list);
 				$f->setEmptyText('Please Select');
-				$f->set($my_existing_data[$field['filter_effected_field_id']]['value']);
 			}
+			$f->set($my_existing_data[$field_name]['value']);
 
-			$this->filter_data_list[$field['filter_effected_field_id']] = [
-																'operator'=>$field['operator'],
-																'filter_effected_field'=>$this->add('xepan\listing\Model_Fields')->load($field['filter_effected_field_id'])->dbColumnName(),
-																'form_field_name'=>$field_name
-															];
+			$this->filter_data_list[$field_name] 
+			= $this->filter_data_list[$field['filter_effected_field_id']] 
+			= [
+				'operator'=>$field['operator'],
+				'filter_effected_field'=>$this->add('xepan\listing\Model_Fields')->load($field['filter_effected_field_id'])->dbColumnName(),
+				'form_field_name'=>$field_name
+			];
 		}
 
 		$form->addSubmit('Submit');
@@ -75,6 +77,7 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 					continue;
 				}
 
+				$this->filter_data_list[$value['form_field_name']]['value'] = $form[$value['form_field_name']];
 				$this->filter_data_list[$key]['value'] = $form[$value['form_field_name']];
 				unset($this->filter_data_list[$key]['form_field_name']);
 			}
@@ -84,7 +87,7 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 			$this->app->memorize('listing_fiter_data',$existing_filter_data);
 
 			if($this->options['result_page']) $this->app->redirect($this->app->url($this->options['result_page']));
-			if($this->options['reload_class']) $this->js()->_selector($this->options['reload_class'])->trigger('reload');
+			if($this->options['reload_class']) $this->js()->_selector($this->options['reload_class'].'>*')->trigger('reload')->execute();
 			$this->app->redirect($this->app->url());
 		}
 	}

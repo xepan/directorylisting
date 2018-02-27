@@ -22,6 +22,15 @@
                 </td>
               </tr>
 
+              <!-- list data set-->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-value">
+                  <div class="xepan-tool-option-title">Select List Data Set</div>
+                  <select id="xepan-listing-data-set-id" data-attr="list_data_set_id" data-defaultvalue="0">
+                  </select>
+                </td>
+              </tr>
+
               <!-- List Display Type -->
               <tr class="xepan-tool-option">
                 <td class="xepan-tool-option-value">
@@ -228,6 +237,15 @@
             $('#{$_name} #list_of_categories').chosen({allow_single_deselect: true });
           }
         });
+
+        $.ajax({
+          url: 'index.php?page=xepan_listing_getrecord_listingdataset',
+          type: 'GET',
+          data: {'listing_id':$(this).val() },
+          success: function ( data ){
+            $('#{$_name} #xepan-listing-data-set-id').html(data);
+          }
+        });        
 
         // $('.chosen-choices').css('width','120px');
       }); 

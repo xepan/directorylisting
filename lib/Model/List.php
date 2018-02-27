@@ -6,8 +6,8 @@ class Model_List extends \xepan\base\Model_Table{
 	public $table='list';
 	public $status = ['Published','UnPublished'];
 	public $actions = [
-					'Active'=>['view','fields','data','filters','manage_layouts','category_association','edit','delete','deactivate'],
-					'Inactive'=>['view','fields','data','filters','category_association','edit','delete','activate']
+					'Active'=>['view','fields','data','filters','list_data_set','manage_layouts','category_association','edit','delete','deactivate'],
+					'Inactive'=>['view','fields','data','filters','list_data_set','category_association','edit','delete','activate']
 					];
 
 	public $acl_type = "Listing\List";
@@ -160,5 +160,8 @@ class Model_List extends \xepan\base\Model_Table{
 
 		$crud->form->add('View')->set(implode(", ",$this->getDataModel()->getActualFields()));
 	}
-	
-}
+		
+	function list_data_set(){
+		$this->app->redirect($this->app->url('xepan_listing_listdataset',['list_id'=>$this->id]));
+	}
+}	

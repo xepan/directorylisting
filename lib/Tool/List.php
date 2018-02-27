@@ -5,6 +5,7 @@ namespace xepan\listing;
 class Tool_List extends \xepan\cms\View_Tool{
 	public $options = [
 				'listing_id'=>0,
+				'list_data_set_id'=>null,
 				'show_data_list'=>'all', //all, new, mostviewed,featured
 				'show_add_button'=>true, // true, false
 				'show_edit_button'=>true, // true, false
@@ -50,6 +51,9 @@ class Tool_List extends \xepan\cms\View_Tool{
 		}
 
 		$this->applyFilters();
+		if($this->options['list_data_set_id']){
+			$this->applyListDataSetCondition();
+		}
 		
 		$crud->setModel($listdata_model,array_keys($fields));
 
@@ -157,13 +161,46 @@ class Tool_List extends \xepan\cms\View_Tool{
 
 	function applyFilters(){
 		$existing_filter_data = $this->app->recall('listing_fiter_data',[]);
-		$my_existing_data = $existing_filter_data[$this->listing_model->id];
+		if(isset($existing_filter_data[$this->listing_model->id])){
+			$my_existing_data = $existing_filter_data[$this->listing_model->id];
+			foreach ($my_existing_data as $condition) {
+				$value = $condition['value'];
+				if($condition['operator'] == "in"){
+					$value = explode(",", $value);
+				}
 
-		foreach ($my_existing_data as $condition) {
-			$this->listdata_model->addCondition($condition['filter_effected_field'],$condition['operator'],$condition['value']);
+				$operator = $condition['operator'];
+				if($condition['operator'] == "contains"){
+					$value = "%$value%";
+					$operator = "like";
+				}
+
+				$this->listdata_model->addCondition($condition['filter_effected_field'],$operator,$value);
+			}
 		}
 	}
 
+	function applyListDataSetCondition(){
+		$conditions = $this->add('xepan\listing\Model_ListDataSetCondition')
+			->addCondition('list_data_set_id',$this->options['list_data_set_id']);
+
+		foreach ($conditions as $condition) {
+			$field_db_name = $condition->ref('filter_effected_field_id')->dbColumnName();
+
+			$value = $condition['value'];
+			if($condition['operator'] == "in"){
+				$value = explode(",", $value);
+			}
+
+			$operator = $condition['operator'];
+			if($condition['operator'] == "contains"){
+				$value = "%$value%";
+				$operator = "like";
+			}
+			
+			$this->listdata_model->addCondition($field_db_name,$operator,$value);
+		}
+	}
 	// function getTemplate(){
 	// 	return $this->lister->template;
 	// }
