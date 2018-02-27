@@ -20,7 +20,7 @@ class Model_List extends \xepan\base\Model_Table{
 
 		$this->is(['name|to_trim|required']);
 
-		$this->hasMany('xepan/listing/List','category_id');
+		$this->hasMany('xepan\listing\Category','list_id');
 
 		$this->add('dynamic_model\Controller_AutoCreator');
 
@@ -159,7 +159,7 @@ class Model_List extends \xepan\base\Model_Table{
 		$crud = $page->add('xepan\base\CRUD');
 		$crud->setModel($m);
 
-		$crud->form->add('View')->set(implode(", ",$this->getDataModel()->getActualFields()));
+		$crud->form->add('View')->set(implode(", ",$this->getDataModel()->getActualFields())." ,categories");
 	}
 		
 	function list_data_set(){

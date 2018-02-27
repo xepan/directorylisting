@@ -22,7 +22,8 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'display_sequence'=>'desc', //either desc or asc
 				'show_detail_button'=>true, // true, false
 				'custom_template'=>'', // define your custom templates
-				'listing_add_edit_form_layout'=>0
+				'listing_add_edit_form_layout'=>0,
+				'listing_add_allow_category_selection'=>false
 			];
 	
 	function init(){
@@ -75,10 +76,33 @@ class Tool_List extends \xepan\cms\View_Tool{
 
 		// category condition
 		if($this->options['list_of_categories']){
-			
+			$cat_j = $this->listdata_model->leftJoin('listing_category_list_data_association.list_data_id');
+			$cat_j->addField('list_id');
+			$cat_j->addField('list_category_id');
+
+			$this->listdata_model->addCondition('list_category_id',explode(",", $this->options['list_of_categories']));
+			$this->listdata_model->addCondition('list_id',$this->listing_model->id);
 		}
 
+		if($crud->isEditing() && $this->options['listing_add_allow_category_selection']){
+			$f = $crud->form->addField('DropDown','categories');
+			$f->setModel($this->listing_model->ref('xepan\listing\Category'));
+			$f->setAttr('multiple');
+			$crud->addHook('formSubmit',function($c,$cf){
+				$cf->model->set($cf->getAllFields());
+				$cf->model->save();
+
+				$cf->model->associateWithCategories(explode(",", $cf['categories']));
+				return true; // do not proceed with default crud form submit behaviour
+			});
+		}
+
+
 		$crud->setModel($listdata_model,array_keys($fields));
+
+		if($crud->isEditing('edit')){			
+			$crud->form->getElement('categories')->set($crud->form->model->getAssociatedCategories());
+		}
 
 		$crud->add('xepan\cms\Controller_Tool_Optionhelper',['options'=>$this->options,'model'=>$listdata_model]);
 	}

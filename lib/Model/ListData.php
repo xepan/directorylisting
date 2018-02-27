@@ -39,7 +39,7 @@ class Model_ListData extends \xepan\base\Model_Table{
 		$this->status = $status = explode(",",$this->listing['list_data_status']);
 		// actions
 		foreach ($status as $key => $value) {
-			$this->actions[$value] = ['view','change_status','category_association','edit','delete'];
+			$this->actions[$value] = ['view','change_status','edit','delete'];
 		}
 		
 		parent::init();
@@ -144,4 +144,32 @@ class Model_ListData extends \xepan\base\Model_Table{
         return $this->owner->add(get_class($this), ['listing'=>$this->listing]);
     }
 
+    function getAssociatedCategories(){
+    	
+    	$asso = $this->add('xepan\listing\Model_Association_ListDataCategory');
+		$asso->addCondition('list_id',$this->listing->id);
+		$asso->addCondition('list_data_id',$this->id);
+		return array_column($asso->getRows(),'list_category_id');
+    }
+
+	function associateWithCategories($category_ids,$remove_all_first=true){
+		if($remove_all_first){
+			$asso = $this->add('xepan\listing\Model_Association_ListDataCategory');
+			$asso->addCondition('list_id',$this->listing->id);
+			$asso->addCondition('list_data_id',$this->id);
+			$asso->deleteAll();
+		}
+
+		foreach ($category_ids as $cat_id) {
+			$asso = $this->add('xepan\listing\Model_Association_ListDataCategory');
+			$asso['list_id'] = $this->listing->id;
+			$asso['list_data_id'] = $this->id;
+			$asso['list_category_id'] = $cat_id;
+			$asso->save();
+		}
+	}
+
+	function listModel(){
+		return $this->listing;
+	}
 }
