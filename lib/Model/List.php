@@ -6,8 +6,8 @@ class Model_List extends \xepan\base\Model_Table{
 	public $table='list';
 	public $status = ['Published','UnPublished'];
 	public $actions = [
-					'Active'=>['view','fields','data','filters','list_data_set','manage_layouts','category_association','edit','delete','deactivate'],
-					'Inactive'=>['view','fields','data','filters','list_data_set','category_association','edit','delete','activate']
+					'Active'=>['view','fields','data','filters','list_data_set','manage_layouts','category','edit','delete','deactivate'],
+					'Inactive'=>['view','fields','data','filters','list_data_set','category','edit','delete','activate']
 					];
 
 	public $acl_type = "Listing\List";
@@ -75,7 +75,7 @@ class Model_List extends \xepan\base\Model_Table{
 		return $table_name = 'xepan_listing_'.$this->app->normalizeName(strtolower($this['name']));
 	}
 
-	function page_category_association($page){
+	function page_category($page){
 		$model = $this->add('xepan\listing\Model_Category');
 		$model->addCondition('list_id',$this->id);
 
@@ -86,10 +86,6 @@ class Model_List extends \xepan\base\Model_Table{
 		}
 		$crud->grid->addQuickSearch(['name']);
 		$crud->grid->addPaginator(15);
-	}
-
-	function category_association(){
-
 	}
 
 	function filters(){
@@ -150,6 +146,11 @@ class Model_List extends \xepan\base\Model_Table{
 
 	function getDataModel(){
 		return $this->add('xepan\listing\Model_ListData',['listing'=>$this]);
+	}
+
+	function getLayoutArray($layout_id){
+		$m = $this->add('xepan\listing\Model_ListDataFormLayout');
+		return $m->load($layout_id)->getLayoutArray();
 	}
 
 	function page_manage_layouts($page){

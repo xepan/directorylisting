@@ -22,6 +22,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'display_sequence'=>'desc', //either desc or asc
 				'show_detail_button'=>true, // true, false
 				'custom_template'=>'', // define your custom templates
+				'listing_add_edit_form_layout'=>0
 			];
 	
 	function init(){
@@ -66,6 +67,17 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$listdata_model->addCondition('created_by_id',$contact->id);
 		}
 		
+		if($crud->isEditing() AND $this->options['listing_add_edit_form_layout']){
+			$crud->form->add('xepan\base\Controller_FLC')
+				->addContentSpot()
+				->layout($this->listing_model->getLayoutArray($this->options['listing_add_edit_form_layout']));
+		}
+
+		// category condition
+		if($this->options['list_of_categories']){
+			
+		}
+
 		$crud->setModel($listdata_model,array_keys($fields));
 
 		$crud->add('xepan\cms\Controller_Tool_Optionhelper',['options'=>$this->options,'model'=>$listdata_model]);
@@ -126,6 +138,9 @@ class Tool_List extends \xepan\cms\View_Tool{
 	}
 
 	function addToolCondition_show_quick_search($value,$model){
+		if($this->lister->isEditing()){
+			return;
+		}
 		if($value){			
 			$this->lister->grid->addQuickSearch($this->listdata_model->filterable_fields);
 		}else{

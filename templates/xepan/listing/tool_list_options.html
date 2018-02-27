@@ -64,6 +64,16 @@
                   </select>
                 </td>
               </tr>
+
+              <!-- ADd Form Layout -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-value">
+                  <div class="xepan-tool-option-title">Add/Edit Form Layout</div>
+                  <select id="xepan-listing-form-layout" data-attr="listing_add_edit_form_layout" data-defaultvalue="0">
+                  </select>
+                </td>
+              </tr>
+
               <!-- show edit button -->
               <tr class="xepan-tool-option">
                 <td class="xepan-tool-option-value"> 
@@ -257,6 +267,16 @@
             $('#{$_name} #xepan-listing-data-set-id').html(data);
           }
         });        
+
+        $.ajax({
+          url: 'index.php?page=xepan_listing_getrecord_listlayout',
+          type: 'GET',
+          data: {'list_id':$(this).val() },
+          success: function ( data ){
+            $('#{$_name} #xepan-listing-form-layout').html(data);
+          }
+        });        
+
 
         // $('.chosen-choices').css('width','120px');
       }); 

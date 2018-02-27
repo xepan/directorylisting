@@ -8,7 +8,7 @@ class page_listdata extends \xepan\base\Page {
 	function init(){
 		parent::init();
 
-		$list_id =  $this->app->stickyGET('listid');
+		$list_id =  $this->app->stickyGET('listid');		
 		$m = $this->add('xepan\listing\Model_ListData',['listing'=>$list_id]);
 		$crud = $this->add('xepan\hr\CRUD');
 		$crud->setModel($m);

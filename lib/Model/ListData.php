@@ -4,7 +4,7 @@ namespace xepan\listing;
 
 class Model_ListData extends \xepan\base\Model_Table{
 	public $listing;
-	public $acl_type = "listdata";
+	public $acl_type = "listing\listdata";
 
 	public $validation_array=[];
 	
@@ -14,6 +14,8 @@ class Model_ListData extends \xepan\base\Model_Table{
 	public $filterable_fields = [];
 	public $changable_fields = [];
 	public $moderate_fields = [];
+	public $actions = [];
+	public $status = [];
 
 	public $predefined_fields = [
 			'created_by_id'=>'created_by_id',
@@ -28,9 +30,18 @@ class Model_ListData extends \xepan\base\Model_Table{
 			$this->listing = $this->add('xepan\listing\Model_List')->load($this->listing);
 		}elseif(is_string($this->listing)){
 			$this->listing = $this->add('xepan\listing\Model_List')->loadBy('name',$this->listing);
+		}else{
+			var_dump($_GET['listid']);
+			throw new \Exception("list must defined");
 		}
 
 		$this->acl_type = $this->table = $this->listing->getTableName();
+
+		$this->status = $status = explode(",",$this->listing['list_data_status']);
+		// actions
+		foreach ($status as $key => $value) {
+			$this->actions[$value] = ['view','change_status','category_association','edit','delete'];
+		}
 		
 		parent::init();
 
@@ -108,5 +119,11 @@ class Model_ListData extends \xepan\base\Model_Table{
 
 		// setting up status dropdown to status field
 		$this->getElement('status')->enum(explode(",",$this->listing['list_data_status']));
+	}
+
+	function page_change_status($page){
+		$form = $page->add('Form');
+		// $form->addField('DropDown','status')->setListValue(['']);
+
 	}
 }
