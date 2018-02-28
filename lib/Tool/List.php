@@ -24,7 +24,8 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'custom_template'=>'', // define your custom templates
 				'listing_add_edit_form_layout'=>0,
 				'listing_add_allow_category_selection'=>false,
-				'download_button_selector'=>'.do-action-download'
+				'download_button_selector'=>'.do-action-download',
+				'list_detail_page'=>null,
 			];
 	
 	function init(){
@@ -117,6 +118,14 @@ class Tool_List extends \xepan\cms\View_Tool{
 			}
 		}
 
+		// detail page
+		if($detail_page = $this->options['list_detail_page'] AND !trim($this->options['custom_template'])){
+			$crud->grid->addColumn('Button','detail');
+			if($id = $_GET['detail']){
+				$this->app->js(true)->univ()->redirect($this->app->url($detail_page,['list_data_id'=>$id]))->execute();
+			}	
+		}
+
 		$crud->add('xepan\cms\Controller_Tool_Optionhelper',['options'=>$this->options,'model'=>$listdata_model]);
 	}
 
@@ -183,6 +192,20 @@ class Tool_List extends \xepan\cms\View_Tool{
 		}else{
 			$this->lister->grid->template->tryDel('quick_search_wrapper');
 		}
+	}
+
+	function addToolCondition_row_list_detail_page($value, $l){
+		// $config = $this->add('xepan\base\Model_ConfigJsonModel',
+		  //           [
+		  //               'fields'=>[
+		  //                           'enable_sef'=>'checkbox'
+		  //                       ],
+		  //                   'config_key'=>'SEF_Enable',
+		  //                   'application'=>'cms'
+		  //       ]);
+		  //       $config->tryLoadAny();
+		$l->current_row['list_detail_page_url'] = $this->app->url($this->options['list_detail_page'],['list_data_id'=>$l->model->id]);
+		
 	}
 
 	function addToolCondition_show_data_list($value,$model){		

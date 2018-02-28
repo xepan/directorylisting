@@ -20,7 +20,7 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 
 		if($this->owner instanceof \AbstractController) return;
 
-		$list_id = $this->app->stickyGET('listid');
+		$list_id = $this->app->stickyGET('list_data_id');
 
 		if($message = $this->requiredOptionMessage()){
 			$this->add('View_Warning')->addClass('alert alert-warning')->set($message);
