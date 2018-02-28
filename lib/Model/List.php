@@ -6,9 +6,9 @@ class Model_List extends \xepan\base\Model_Table{
 	public $table='list';
 	public $status = ['Published','UnPublished'];
 	public $actions = [
-					'Active'=>['view','fields','data','filters','list_data_set','manage_layouts','manage_status_activity','category','edit','delete','deactivate'],
-					'Inactive'=>['view','fields','data','filters','list_data_set','manage_status_activity','category','edit','delete','activate']
-					];
+					'Active'=>['view','fields','data','filters','list_data_set','manage_layouts','manage_status_activity','plan_management','plan_associate_with_user','category','edit','delete','deactivate'],
+					'Inactive'=>['view','fields','data','filters','list_data_set','manage_status_activity','category','plan_management','edit','delete','activate']
+				];
 
 	public $acl_type = "Listing\List";
 	function init(){
@@ -199,6 +199,19 @@ class Model_List extends \xepan\base\Model_Table{
 			$f->setValueList($fields);
 			$f->set(explode(',', $form->model['sms_send_to_list_data_fields']));			
 		}
+	}
 
+	function plan_management(){
+		$this->app->redirect($this->app->url('xepan_listing_plan',['list_id'=>$this->id]));
+	}
+
+	function page_plan_associate_with_user($page){
+		$model = $page->add('xepan\listing\Model_ContactPlanAssociation');
+		$model->addCondition('list_id',$this->id);
+
+		$model->getElement('plan_id')->getModel()->addCondition('list_id',$this->id);
+		$crud = $page->add('xepan\hr\CRUD');
+		$crud->setModel($model);
+		$crud->grid->addPaginator(50);
 	}
 }	
