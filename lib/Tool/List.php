@@ -23,7 +23,8 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'show_detail_button'=>true, // true, false
 				'custom_template'=>'', // define your custom templates
 				'listing_add_edit_form_layout'=>0,
-				'listing_add_allow_category_selection'=>false
+				'listing_add_allow_category_selection'=>false,
+				'download_button_selector'=>'.do-action-download'
 			];
 	
 	function init(){
@@ -97,11 +98,23 @@ class Tool_List extends \xepan\cms\View_Tool{
 			});
 		}
 
-
 		$crud->setModel($listdata_model,array_keys($fields));
 
 		if($crud->isEditing('edit')){			
 			$crud->form->getElement('categories')->set($crud->form->model->getAssociatedCategories());
+		}
+
+		// add download button
+		if($this->options['custom_template'] AND $selector = trim($this->options['download_button_selector'])){
+			$this->on('click',$selector,function($js,$data){
+				$id = $data['list-data-id'];
+				$this->app->js(true)->univ()->newWindow($this->app->url('xepan_listing_listdatadownload',['listing_id'=>$this->options['listing_id'],'list_data_id'=>$id]),'DownloadListData')->execute();
+			});
+		}elseif(!$this->options['custom_template'] AND trim($this->options['download_button_selector'])){
+			$download_btn = $crud->grid->addColumn('Button','download');
+			if($id = $_GET['download']){
+				$this->app->js(true)->univ()->newWindow($this->app->url('xepan_listing_listdatadownload',['listing_id'=>$this->options['listing_id'],'list_data_id'=>$id]),'DownloadListData')->execute();
+			}
 		}
 
 		$crud->add('xepan\cms\Controller_Tool_Optionhelper',['options'=>$this->options,'model'=>$listdata_model]);

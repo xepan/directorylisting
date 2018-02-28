@@ -273,4 +273,47 @@ class Model_ListData extends \xepan\base\Model_Table{
 		return $this->listing;
 	}
 
+
+	function generatePDF($action = "return",$layout=null){
+
+		$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		// set document information
+		$pdf->SetCreator(PDF_CREATOR);
+		$pdf->SetAuthor('xEpan ERP');
+		$pdf->SetTitle($this->listing['name']."_".$this['id']);
+		$pdf->SetSubject($this->listing['name']."_".$this['id']);
+		$pdf->SetKeywords($this->listing['name']."_".$this['id']);
+
+		// set default monospaced font
+		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+		// set font
+		$pdf->SetFont('dejavusans', '', 10);
+		//remove header or footer hr lines
+		$pdf->SetPrintHeader(false);
+		$pdf->SetPrintFooter(false);
+		// add a page
+		$pdf->AddPage();
+
+		$template = $this->add('GiTemplate');
+		$template->loadTemplateFromString($layout);
+		
+		$view = $this->add('View',null,null,$template);
+		$view->template->trySet($this->data);
+		$html = $view->getHTML();
+		$pdf->writeHTML($html, false, false, true, false, '');
+		// set default form properties
+		$pdf->setFormDefaultProp(array('lineWidth'=>1, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 200), 'strokeColor'=>array(255, 128, 128)));
+		// reset pointer to the last page
+		$pdf->lastPage();
+		//Close and output PDF document
+		switch ($action) {
+			case 'return':
+				return $pdf->Output(null, 'S');
+				break;
+			case 'dump':
+				return $pdf->Output(null, 'I');
+				exit;
+			break;
+		}
+	}
 }

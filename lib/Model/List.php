@@ -6,7 +6,7 @@ class Model_List extends \xepan\base\Model_Table{
 	public $table='list';
 	public $status = ['Published','UnPublished'];
 	public $actions = [
-					'Active'=>['view','fields','data','filters','list_data_set','manage_layouts','manage_status_activity','plan_management','plan_associate_with_user','category','edit','delete','deactivate'],
+					'Active'=>['view','fields','data','filters','list_data_set','manage_layouts','manage_status_activity','plan_management','plan_associate_with_user','category','configuration','edit','delete','deactivate'],
 					'Inactive'=>['view','fields','data','filters','list_data_set','manage_status_activity','category','plan_management','edit','delete','activate']
 				];
 
@@ -17,6 +17,7 @@ class Model_List extends \xepan\base\Model_Table{
 		$this->addField('name');
 		$this->addField('list_data_status')->type('text')->hint('comma (,) seperated multiple values i.e. Pending,Approved,Rejected');
 		$this->addField('status')->enum(['Active','InActive'])->defaultValue('Active');
+		$this->addField('list_data_download_layout')->type('text')->display(['form'=>'xepan\base\RichText']);
 
 		$this->is(['name|to_trim|required']);
 
@@ -213,5 +214,20 @@ class Model_List extends \xepan\base\Model_Table{
 		$crud = $page->add('xepan\hr\CRUD');
 		$crud->setModel($model);
 		$crud->grid->addPaginator(50);
+	}
+
+	function page_configuration($page){
+		$tab = $page->add('Tabs');
+		$dt = $tab->addTab('List Data Download Layout');
+
+		$form = $dt->add('Form');
+		$form->addField('xepan\base\RichText','list_data_download_layout')->set($this['list_data_download_layout']);
+		$form->addSubmit('Submit');
+		$form->add('View')->set(implode(", ",$this->getDataModel()->getActualFields()));
+		if($form->isSubmitted()){
+			$this['list_data_download_layout'] = $form['list_data_download_layout'];
+			$this->save();
+			$this->app->page_action_result = $this->app->js(null,$page->js()->univ()->closeDialog())->univ()->successMessage('Updated Successfully');
+		}
 	}
 }	

@@ -16,6 +16,7 @@ class Initiator extends \Controller_Addon {
 		$this->app->listing_menu->addItem(['Listing Category','icon'=>' fa fa-sitemap'],'xepan_listing_category');//->setAttr(['title'=>'Blogs']);
 		$this->app->listing_menu->addItem(['Listing List','icon'=>' fa fa-file-text-o'],'xepan_listing_list');//->setAttr(['title'=>'Blogs']);
 		$this->app->listing_menu->addItem(['Listing Fields','icon'=>' fa fa-file-text-o'],'xepan_listing_field');//->setAttr(['title'=>'Blogs']);
+		$this->app->listing_menu->addItem(['Listing Configuration','icon'=>' fa fa-file-text-o'],'xepan_listing_configuration');//->setAttr(['title'=>'Blogs']);
 		
 		return $this;
 
