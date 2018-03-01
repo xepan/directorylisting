@@ -22,6 +22,8 @@ class Model_Fields extends \xepan\base\Model_Table{
 					->setValueList(
 							array(
 								'Number'=>"Number",
+								'Decimal'=>"Decimal",
+								'Int'=>"Integer",
 								'email'=>'Email',
 								'line'=>'Line',
 								'text'=> 'Text',
@@ -144,8 +146,11 @@ class Model_Fields extends \xepan\base\Model_Table{
 	function dbFieldType(){
 
 		switch ($this['field_type']) {
-			case 'Number':
+			case 'Decimal':
 				$type = 'decimal(10,2)';
+				break;
+			case 'Int':
+				$type = "int";
 				break;
 			case 'text':
 				$type = "text";
