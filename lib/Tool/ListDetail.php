@@ -12,7 +12,8 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 					'allow_review'=>true,
 					'allow_rating'=>true,
 					'show_social_share'=>false,
-					'custom_template'=>"collapse",
+					'custom_template'=>null,
+					'show_detail_if_permitted'=>false
 				];
 	
 	function init(){
@@ -38,6 +39,12 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 			$this->template->tryDel("detail_wrapper");
 			return;
 		}
+		
+		if($this->options['show_detail_if_permitted'] AND !$this->listdata_model->isPermitted()){
+			$this->add('View_Warning')->addClass('alert alert-warning')->set("You are not permitted to view this detail");
+			return;
+		}
+
 
 		// $this->app->print_r($this->listdata_model->data);
 		$this->setModelValue($this->listdata_model);
@@ -72,7 +79,7 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 	function requiredOptionMessage(){
 		if(!$this->options['listing_id']) return "please select listing ...";
 		
-		if(!$_GET['listid']) return "listing data not defined ...";
+		if(!$_GET['list_data_id']) return "listing data not defined ...";
 		return false;		
 	}
 
