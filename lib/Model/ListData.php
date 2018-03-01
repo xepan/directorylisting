@@ -325,11 +325,12 @@ class Model_ListData extends \xepan\base\Model_Table{
 		$asso->addCondition('contact_id',$contact->id);
 		$asso->addCondition('list_id',$this->listing->id);
 		$asso->addCondition('plan_status','Active');
-		$asso->addCondition('start_date','>=',$this->app->now);
-		$asso->addCondition('end_date','<',$this->app->nextDate($this->app->now));
+		$asso->addCondition('start_date','<=',$this->app->now);
+		$asso->addCondition('end_date','>',$this->app->nextDate($this->app->now));
 		$asso->tryLoadAny();
+		
 		if(!$asso->loaded()) return false;
-
+		
 		if($asso['number_of_list_detail_allowed'] === null) return true;
 
 		// if already list data viwed then return true
