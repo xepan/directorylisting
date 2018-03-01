@@ -17,7 +17,7 @@ class page_filter extends \xepan\base\Page {
 		$crud->setModel($model);
 		$crud->grid->addPaginator(10);
 
-		if($crud->isEditing()){
+		if($crud->isEditing('edit')){
 			$form = $crud->form;
 			$form->add('View')->set(implode(", ",array_column($model->ref('xepan\listing\Model_FilterField')->getRows(), 'name')));
 		}
