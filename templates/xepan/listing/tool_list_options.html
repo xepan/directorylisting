@@ -207,8 +207,8 @@
                   <select id="display_sequence" data-attr="display_sequence" data-defaultvalue="desc">
                     <option value="lifo">Recently Added First</option>
                     <option value="fifo">First Added First</option>
-                    <option value="alphabetasc">Alphabet Ascending </option>
-                    <option value="alphabetdesc">Alphabet Descending </option>
+                    <!-- <option value="alphabetasc">Alphabet Ascending </option> -->
+                    <!-- <option value="alphabetdesc">Alphabet Descending </option> -->
                   </select>
                 </td>
               </tr>
@@ -221,11 +221,23 @@
               </tr>
 
              <tr class="xepan-tool-option">
-              <td class="xepan-tool-option-value">
-                <div class="xepan-tool-option-title">List Detail Page</div>
-                <input data-attr="list_detail_page"/>
-              </td>
+                <td class="xepan-tool-option-value">
+                  <div class="xepan-tool-option-title">List Detail Page</div>
+                  <input data-attr="list_detail_page"/>
+                </td>
               </tr>
+              
+              <!-- list data set-->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-value">
+                  <div class="xepan-tool-option-title">Show Detail If Permitted</div>
+                  <select data-attr="show_detail_if_permitted" data-defaultvalue="0">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                  </select>
+                </td>
+              </tr>
+
             </table>
         </div>
       </div>

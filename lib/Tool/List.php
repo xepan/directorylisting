@@ -19,13 +19,14 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'status_to_show'=>null, //comma seperated multiple values
 				'is_filter_affected'=>true, // true, false
 				'list_of_categories'=>null, // comma seperated multiple values
-				'display_sequence'=>'desc', //either desc or asc
+				'display_sequence'=>'lifo', //either fifo, alphabetasc, alphabetdesc
 				'show_detail_button'=>true, // true, false
 				'custom_template'=>'', // define your custom templates
 				'listing_add_edit_form_layout'=>0,
 				'listing_add_allow_category_selection'=>false,
 				'download_button_selector'=>'.do-action-download',
 				'list_detail_page'=>null,
+				'show_detail_if_permitted'=>false
 			];
 	
 	function init(){
@@ -99,9 +100,17 @@ class Tool_List extends \xepan\cms\View_Tool{
 			});
 		}
 
+		if($this->options['display_sequence']){
+			$order = 'desc';
+			if($this->options['display_sequence'] == 'fifo')
+				$order = "asc";
+
+			$listdata_model->setOrder('id',$order);
+		}
+
 		$crud->setModel($listdata_model,array_keys($fields));
 
-		if($crud->isEditing('edit')){			
+		if($crud->isEditing('edit')){
 			$crud->form->getElement('categories')->set($crud->form->model->getAssociatedCategories());
 		}
 
@@ -109,11 +118,22 @@ class Tool_List extends \xepan\cms\View_Tool{
 		if($this->options['custom_template'] AND $selector = trim($this->options['download_button_selector'])){
 			$this->on('click',$selector,function($js,$data){
 				$id = $data['list-data-id'];
+				if($this->options['show_detail_if_permitted']){
+					$data_model = $this->listing_model->getDataModel()->load($id);
+					if(!$data_model->isPermitted())
+						$this->app->js(true)->univ()->errorMessage('you are not permitted to view this record')->execute();
+				}
+
 				$this->app->js(true)->univ()->newWindow($this->app->url('xepan_listing_listdatadownload',['listing_id'=>$this->options['listing_id'],'list_data_id'=>$id]),'DownloadListData')->execute();
 			});
 		}elseif(!$this->options['custom_template'] AND trim($this->options['download_button_selector'])){
 			$download_btn = $crud->grid->addColumn('Button','download');
 			if($id = $_GET['download']){
+				if($this->options['show_detail_if_permitted']){
+					$data_model = $this->listing_model->getDataModel()->load($id);
+					if(!$data_model->isPermitted())
+						$this->app->js(true)->univ()->errorMessage('you are not permitted to view this record')->execute();
+				}
 				$this->app->js(true)->univ()->newWindow($this->app->url('xepan_listing_listdatadownload',['listing_id'=>$this->options['listing_id'],'list_data_id'=>$id]),'DownloadListData')->execute();
 			}
 		}
@@ -122,6 +142,11 @@ class Tool_List extends \xepan\cms\View_Tool{
 		if($detail_page = $this->options['list_detail_page'] AND !trim($this->options['custom_template'])){
 			$crud->grid->addColumn('Button','detail');
 			if($id = $_GET['detail']){
+				if($this->options['show_detail_if_permitted']){
+					$data_model = $this->listing_model->getDataModel()->load($id);
+					if(!$data_model->isPermitted())
+						$this->app->js(true)->univ()->errorMessage('you are not permitted to view this record')->execute();
+				}
 				$this->app->js(true)->univ()->redirect($this->app->url($detail_page,['list_data_id'=>$id]))->execute();
 			}	
 		}

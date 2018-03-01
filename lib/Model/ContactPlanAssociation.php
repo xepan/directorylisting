@@ -17,14 +17,15 @@ class Model_ContactPlanAssociation extends \xepan\base\Model_Table{
 
 		$this->hasOne('xepan\listing\List','list_id');
 		$this->hasOne('xepan\listing\Plan','plan_id');
-		$this->hasOne('xepan\base\Contact','contact_id');
+		$this->hasOne('xepan\listing\Contact','contact_id');
 
+		$this->addField('number_of_list_detail_allowed')->type('number')->system(true);
 		$this->addField('created_at')->type('datetime')->defaultValue($this->app->now);
 		$this->addField('start_date')->type('datetime');
 		$this->addField('end_date')->type('datetime');
 
 		$this->addExpression('plan_status')->set($this->ref('plan_id')->fieldQuery('status'));
-		$this->add('dynamic_model\Controller_AutoCreator');
+		// $this->add('dynamic_model\Controller_AutoCreator');
 		$this->addHook('beforeSave',[$this,'updatePlanValue']);
 
 		$this->is([
@@ -44,6 +45,8 @@ class Model_ContactPlanAssociation extends \xepan\base\Model_Table{
 				$this['start_date'] = $this->app->now;
 			if(!$this['end_date'])
 				$this['end_date'] = date('Y-m-d H:i:s', strtotime($this->app->now. ' + '.$plan['valid_for_days'].' days'));
+			
+			$this['number_of_list_detail_allowed'] = $plan['number_of_list_detail_allowed'];
 		}
 	}
 

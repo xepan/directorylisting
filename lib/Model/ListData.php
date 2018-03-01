@@ -316,4 +316,45 @@ class Model_ListData extends \xepan\base\Model_Table{
 			break;
 		}
 	}
+
+	function isPermitted(){
+		$contact = $this->add('xepan\listing\Model_Contact');
+		if(!$contact->loadLoggedIn()) throw new \Exception("Contact not found");
+
+		$asso = $this->add('xepan\listing\Model_ContactPlanAssociation');
+		$asso->addCondition('contact_id',$contact->id);
+		$asso->addCondition('list_id',$this->listing->id);
+		$asso->addCondition('plan_status','Active');
+		$asso->addCondition('start_date','>=',$this->app->now);
+		$asso->addCondition('end_date','<',$this->app->nextDate($this->app->now));
+		$asso->tryLoadAny();
+		if(!$asso->loaded()) return false;
+
+		if($asso['number_of_list_detail_allowed'] === null) return true;
+
+		// if already list data viwed then return true
+		$mylist = $this->add('xepan\listing\Model_MyList');
+		$mylist->addCondition('contact_id',$contact->id);
+		$mylist->addCondition('list_id',$this->listing->id);
+		$mylist->addCondition('created_at','>=',$asso['start_date']);
+		$mylist->addCondition('created_at','<',$this->app->nextDate($asso['end_date']));
+		$mylist->addCondition('list_data_id',$this->id);
+		$mylist->tryLoadAny();
+		if($mylist->loaded()) return true;
+
+		$mylist = $this->add('xepan\listing\Model_MyList');
+		$mylist->addCondition('contact_id',$contact->id);
+		$mylist->addCondition('list_id',$this->listing->id);
+		$mylist->addCondition('created_at','>=',$asso['start_date']);
+		$mylist->addCondition('created_at','<',$this->app->nextDate($asso['end_date']));
+
+		if($asso['number_of_list_detail_allowed'] > $mylist->count()->getOne()){
+			$mylist['list_data_id'] = $this->id;
+			$mylist->save();
+			return true;
+		}
+
+		return false;
+	}
+
 }
