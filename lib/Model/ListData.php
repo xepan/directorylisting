@@ -156,7 +156,9 @@ class Model_ListData extends \xepan\base\Model_Table{
     	$asso = $this->add('xepan\listing\Model_Association_ListDataCategory');
 		$asso->addCondition('list_id',$this->listing->id);
 		$asso->addCondition('list_data_id',$this->id);
-		return array_column($asso->getRows(),'list_category_id');
+		$x= array_column($asso->getRows(),'list_category_id');
+		if($x[0]===null) unset($x[0]);
+		return $x;
     }
 
 	function associateWithCategories($category_ids,$remove_all_first=true){
