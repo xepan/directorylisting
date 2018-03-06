@@ -28,7 +28,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'list_detail_page'=>null,
 				'show_detail_if_permitted'=>false,
 				'show_paginator'=>true,
-				'data_row_limit'=>10
+				'data_row_limit'=>null
 			];
 	
 	function init(){
