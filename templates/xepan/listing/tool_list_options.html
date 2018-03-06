@@ -251,7 +251,7 @@
              <tr class="xepan-tool-option">
                 <td class="xepan-tool-option-value">
                   <div class="xepan-tool-option-title">Data Limit Per Row</div>
-                  <input data-attr="data_row_limit"/>
+                  <input data-attr="data_row_limit" data-defaultvalue="0"/>
                 </td>
               </tr>
             </table>
@@ -286,6 +286,7 @@
             $('#{$_name} #listing_status_to_show').html(data);
             $('#{$_name} #listing_status_to_show').chosen();
             $('#{$_name} #listing_status_to_show').chosen({allow_single_deselect: true });
+            $('#{$_name} #listing_status_to_show').val($(current_selected_component).attr('status_to_show'));
           }
         });
 
@@ -298,6 +299,7 @@
             $('#{$_name} #list_of_categories').html(data);
             $('#{$_name} #list_of_categories').chosen();
             $('#{$_name} #list_of_categories').chosen({allow_single_deselect: true });
+            $('#{$_name} #list_of_categories').val($(current_selected_component).attr('list_of_categories'));
           }
         });
 
@@ -307,6 +309,7 @@
           data: {'listing_id':$(this).val() },
           success: function ( data ){
             $('#{$_name} #xepan-listing-data-set-id').html(data);
+            $('#{$_name} #xepan-listing-data-set-id').val($(current_selected_component).attr('list_data_set_id'));
           }
         });        
 
@@ -316,6 +319,7 @@
           data: {'list_id':$(this).val() },
           success: function ( data ){
             $('#{$_name} #xepan-listing-form-layout').html(data);
+            $('#{$_name} #xepan-listing-form-layout').set($(current_selected_component).attr('listing_add_edit_form_layout'));
           }
         });        
 
@@ -332,6 +336,7 @@
           data: { },
           success: function ( data ){
             $('#{$_name} #xepan-listing-id').html(data);
+            $('#{$_name} #xepan-listing-id').val($(current_selected_component).attr('listing_id')).trigger('change');
           }
         });
 

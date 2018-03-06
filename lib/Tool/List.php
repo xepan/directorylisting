@@ -110,6 +110,10 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$listdata_model->setOrder('id',$order);
 		}
 
+		// add paginator
+		if($this->options['show_paginator'] AND $limit = $this->options['data_row_limit']){
+			$this->lister->grid->addPaginator($limit);
+		}
 		if(!$this->options['show_paginator'] AND $limit = $this->options['data_row_limit']){
 			$listdata_model->setLimit($limit);
 		}
@@ -212,15 +216,6 @@ class Tool_List extends \xepan\cms\View_Tool{
 		}
 		$fields = array_merge($fields,$premium_fields);
 		return $fields;
-	}
-
-	function addToolCondition_show_paginator($value,$model){
-		if($this->lister->isEditing()){
-			return;
-		}
-		
-		if($value)
-			$this->lister->grid->addPaginator($ipp=$this->options['data_row_limit']);
 	}
 
 	function addToolCondition_show_quick_search($value,$model){
