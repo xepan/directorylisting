@@ -55,6 +55,7 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 			$value_list = [];
 			if(in_array($field['field_type'], ['DropDown','radio'])){
 				if($values = trim($field['default_value'])){
+					$t= explode(",", $values);
 					$value_list = array_combine($t, $t);
 				}elseif($values = $field['populate_values_from_field_id']){
 					$t = $field->getDistinctDataValue($this->list_model);
