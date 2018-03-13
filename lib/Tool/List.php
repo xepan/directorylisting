@@ -26,7 +26,9 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'listing_add_allow_category_selection'=>false,
 				'download_button_selector'=>'.do-action-download',
 				'list_detail_page'=>null,
-				'show_detail_if_permitted'=>false
+				'show_detail_if_permitted'=>false,
+				'show_paginator'=>true,
+				'data_row_limit'=>null
 			];
 	
 	function init(){
@@ -106,6 +108,14 @@ class Tool_List extends \xepan\cms\View_Tool{
 				$order = "asc";
 
 			$listdata_model->setOrder('id',$order);
+		}
+
+		// add paginator
+		if($this->options['show_paginator'] AND $limit = $this->options['data_row_limit']){
+			$this->lister->grid->addPaginator($limit);
+		}
+		if(!$this->options['show_paginator'] AND $limit = $this->options['data_row_limit']){
+			$listdata_model->setLimit($limit);
 		}
 
 		$crud->setModel($listdata_model,array_keys($fields));
