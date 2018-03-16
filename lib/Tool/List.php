@@ -66,11 +66,18 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$this->applyListDataSetCondition();
 		}
 
+		$contact = $this->add('xepan\base\Model_Contact')
+					->addCondition('user_id',$this->app->auth->model->id)
+					->tryLoadAny();
+
+		// if_allow add
+		if($this->options['show_add_button']){
+			$listdata_model->getElement('created_by_id')->set($contact->id);
+		}
+		
 		if($this->options['show_list_data_created_by_login_user']){
-			$contact = $this->add('xepan\base\Model_Contact')
-						->addCondition('user_id',$this->app->auth->model->id)
-						->tryLoadAny();
 			$listdata_model->addCondition('created_by_id',$contact->id);
+			$listdata_model->addCondition('created_by_id','<>',null);
 		}
 		
 		if($crud->isEditing() AND $this->options['listing_add_edit_form_layout']){
@@ -117,9 +124,9 @@ class Tool_List extends \xepan\cms\View_Tool{
 		if(!$this->options['show_paginator'] AND $limit = $this->options['data_row_limit']){
 			$listdata_model->setLimit($limit);
 		}
-
+		
 		$crud->setModel($listdata_model,array_keys($fields));
-
+		
 		if($crud->isEditing('edit')){
 			$crud->form->getElement('categories')->set($crud->form->model->getAssociatedCategories());
 		}
