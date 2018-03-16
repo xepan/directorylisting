@@ -18,6 +18,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'show_list_data_created_by_login_user'=>false,
 				'status_to_show'=>null, //comma seperated multiple values
 				'is_filter_affected'=>true, // true, false
+				'filter_values'=>null,
 				'list_of_categories'=>null, // comma seperated multiple values
 				'display_sequence'=>'lifo', //either fifo, alphabetasc, alphabetdesc
 				'show_detail_button'=>true, // true, false
@@ -58,6 +59,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$this->lister = $crud = $this->add('xepan\base\CRUD',['allow_add'=>$this->options['show_add_button'],'allow_edit'=>$this->options['show_edit_button'],'allow_del'=>$this->options['show_delete_button'],'grid_options'=>['add_sno'=>false]]);
 		}
 
+		$this->lister->grid->fixed_header = false;
 		if($this->options['is_filter_affected']){
 			$this->applyFilters();
 		}
@@ -290,9 +292,16 @@ class Tool_List extends \xepan\cms\View_Tool{
 
 	function applyFilters(){
 		$existing_filter_data = $this->app->recall('listing_fiter_data',[]);
+		
+		if($this->options['filter_values'])
+			$filter_values = explode(",", $this->options['filter_values']);
+
 		if(isset($existing_filter_data[$this->listing_model->id])){
+
 			$my_existing_data = $existing_filter_data[$this->listing_model->id];
 			foreach ($my_existing_data as $condition) {
+				if(isset($filter_values) AND !in_array($condition['filter_id'],$filter_values)) continue;
+
 				$value = $condition['value'];
 				if($condition['operator'] == "in"){
 					$value = explode(",", $value);

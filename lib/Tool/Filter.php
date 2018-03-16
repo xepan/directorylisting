@@ -33,7 +33,7 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 		$existing_filter_data = $this->app->recall('listing_fiter_data',[]);
 		$my_existing_data = $existing_filter_data[$this->list_model->id];
 
-		$filter = $this->add('xepan\listing\Model_Filter');
+		$this->filter = $filter = $this->add('xepan\listing\Model_Filter');
 		$filter->addCondition('id',$this->options['list_filter_id']);
 		$filter->tryLoadAny();
 
@@ -64,14 +64,17 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 				$f->setValueList($value_list);
 				$f->setEmptyText('Please Select');
 			}
-			$f->set($my_existing_data[$field_name]['value']);
+
+			if($my_existing_data[$field_name]['filter_id'] == $this->filter->id)
+				$f->set($my_existing_data[$field_name]['value']);
 
 			$this->filter_data_list[$field_name] 
 			= $this->filter_data_list[$field['filter_effected_field_id']] 
 			= [
 				'operator'=>$field['operator'],
 				'filter_effected_field'=>$this->add('xepan\listing\Model_Fields')->load($field['filter_effected_field_id'])->dbColumnName(),
-				'form_field_name'=>$field_name
+				'form_field_name'=>$field_name,
+				'filter_id'=>$this->filter->id
 			];
 		}
 
@@ -89,10 +92,9 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 				unset($this->filter_data_list[$key]['form_field_name']);
 			}
 
-			$existing_filter_data[$this->list_model->id]= $this->filter_data_list;
-
-			$this->app->memorize('listing_fiter_data',$existing_filter_data);
+			$existing_filter_data[$this->list_model->id] = $this->filter_data_list;
 			
+			$this->app->memorize('listing_fiter_data',$existing_filter_data);
 
 			if($this->options['result_page']) $this->app->redirect($this->app->url($this->options['result_page']));
 			if($this->options['reload_class']) $this->js()->_selector($this->options['reload_class'].'>*')->trigger('reload')->execute();

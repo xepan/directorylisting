@@ -138,6 +138,13 @@
                 </td>
               </tr>
 
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-value">
+                  <div class="xepan-tool-option-title">Select Filters</div>
+                  <select id="listing-filter-affected-values" style="width:100px;" multiple="" data-attr="filter_values" multiselect="multiselect" class="chosen-select listing-list-option-filter-multiselect"></select>
+                  </select>
+                </td>
+              </tr>
               <!-- show_public_fields -->
               <tr class="xepan-tool-option">
                 <td class="xepan-tool-option-value"> 
@@ -321,9 +328,19 @@
             $('#{$_name} #xepan-listing-form-layout').html(data);
             $('#{$_name} #xepan-listing-form-layout').set($(current_selected_component).attr('listing_add_edit_form_layout'));
           }
-        });        
+        });
 
-
+        $.ajax({
+          url: 'index.php?page=xepan_listing_getrecord_listfilter',
+          type: 'GET',
+          data: {'listing_id':$(this).val() },
+          success: function ( data ){
+            $('#{$_name} #listing-filter-affected-values').html(data);
+            $('#{$_name} #listing-filter-affected-values').chosen();
+            $('#{$_name} #listing-filter-affected-values').chosen({allow_single_deselect: true });
+            $('#{$_name} #listing-filter-affected-values').val($(current_selected_component).attr('filter_values'));
+          }
+        });
         // $('.chosen-choices').css('width','120px');
       }); 
 
