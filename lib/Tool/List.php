@@ -74,9 +74,10 @@ class Tool_List extends \xepan\cms\View_Tool{
 		}
 		
 		if($crud->isEditing() AND $this->options['listing_add_edit_form_layout']){
-			$crud->form->add('xepan\base\Controller_FLC')
+			$form_fields = $crud->form->add('xepan\base\Controller_FLC')
 				->addContentSpot()
-				->layout($this->listing_model->getLayoutArray($this->options['listing_add_edit_form_layout']));
+				->layout($this->listing_model->getLayoutArray($this->options['listing_add_edit_form_layout']))
+				->getFields();
 		}
 
 		// category condition
@@ -118,7 +119,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$listdata_model->setLimit($limit);
 		}
 
-		$crud->setModel($listdata_model,array_keys($fields));
+		$crud->setModel($listdata_model,isset($form_fields)?$form_fields:array_keys($fields),array_keys($fields));
 
 		if($crud->isEditing('edit')){
 			$crud->form->getElement('categories')->set($crud->form->model->getAssociatedCategories());
