@@ -112,8 +112,8 @@ class Model_ListData extends \xepan\base\Model_Table{
 
 		// predefined fields
 		$this->hasOne('xepan\base\Contact','created_by_id');
-		$this->addField('created_at')->type('datetime');
-		$this->addField('updated_at')->type('datetime');
+		$this->addField('created_at')->type('datetime')->defaultValue($this->app->now);
+		$this->addField('updated_at')->type('datetime')->defaultValue($this->app->now);
 		$this->addField('status');
 
 		// setting up status dropdown to status field

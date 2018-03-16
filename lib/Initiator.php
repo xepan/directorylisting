@@ -26,16 +26,20 @@ class Initiator extends \Controller_Addon {
 	}
 
 	function setup_frontend(){
+
 		$this->routePages('xepan_listing');
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
-		->setBaseURL('./vendor/xepan/listing/');
+			->setBaseURL('./vendor/xepan/listing/');
 
-		 $this->app->exportFrontEndTool('xepan\listing\Tool_Category','Listing');
-		 $this->app->exportFrontEndTool('xepan\listing\Tool_List','Listing');
-		 $this->app->exportFrontEndTool('xepan\listing\Tool_Filter','Listing');
-		 $this->app->exportFrontEndTool('xepan\listing\Tool_ListDetail','Listing');
-		 $this->app->exportFrontEndTool('xepan\listing\Tool_ListImage','Listing');
-		 $this->app->exportFrontEndTool('xepan\listing\Tool_ManageListData','Listing');
+		$this->app->exportFrontEndTool('xepan\listing\Tool_Category','Listing');
+		$this->app->exportFrontEndTool('xepan\listing\Tool_List','Listing');
+		$this->app->exportFrontEndTool('xepan\listing\Tool_Filter','Listing');
+		$this->app->exportFrontEndTool('xepan\listing\Tool_ListDetail','Listing');
+		$this->app->exportFrontEndTool('xepan\listing\Tool_ListImage','Listing');
+		$this->app->exportFrontEndTool('xepan\listing\Tool_ManageListData','Listing');
+
+		$contact = $this->add('xepan\listing\Model_Contact');
+		$this->app->addHook('userCreated',[$contact,'createContact']);
 
 		return $this;
 	}
