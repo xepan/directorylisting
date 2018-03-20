@@ -130,7 +130,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 
 		$crud->setModel($listdata_model,isset($form_fields)?$form_fields:array_keys($fields),array_keys($fields));
 
-		if($crud->isEditing('edit')){
+		if($crud->isEditing('edit') && $this->options['listing_add_allow_category_selection']){
 			$crud->form->getElement('categories')->set($crud->form->model->getAssociatedCategories());
 		}
 
