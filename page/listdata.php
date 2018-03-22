@@ -11,7 +11,7 @@ class page_listdata extends \xepan\base\Page {
 		$list_id =  $this->app->stickyGET('listid');		
 		$m = $this->add('xepan\listing\Model_ListData',['listing'=>$list_id]);
 
-		$crud = $this->add('xepan\hr\CRUD');
+		$crud = $this->add('xepan\hr\CRUD',['grid_options'=>['fixed_header'=>false]]);
 		if($crud->isEditing()){
 			$f = $crud->form->addField('DropDown','categories');
 			$f->setModel($m->listModel()->ref('xepan\listing\Category'));

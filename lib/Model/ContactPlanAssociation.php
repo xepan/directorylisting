@@ -24,7 +24,9 @@ class Model_ContactPlanAssociation extends \xepan\base\Model_Table{
 		$this->addField('start_date')->type('datetime');
 		$this->addField('end_date')->type('datetime');
 
-		$this->addExpression('plan_status')->set($this->ref('plan_id')->fieldQuery('status'));
+		$this->addExpression('plan_status')->set(function($m,$q){
+			return $m->ref('plan_id')->fieldQuery('status');
+		});
 		// $this->add('dynamic_model\Controller_AutoCreator');
 		$this->addHook('beforeSave',[$this,'updatePlanValue']);
 

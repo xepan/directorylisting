@@ -167,39 +167,8 @@ class Model_List extends \xepan\base\Model_Table{
 		$this->app->redirect($this->app->url('xepan_listing_listdataset',['list_id'=>$this->id]));
 	}
 
-	function page_manage_status_activity($page){
-		$model = $this->add('xepan\listing\Model_ListingStatusActivity');
-		$model->addCondition('list_id',$this->id);
-		$crud = $page->add('xepan\hr\CRUD');
-		$crud->setModel($model);
-
-		$fields = $this->getDataModel()->getActualFields();
-		
-		if($crud->isEditing()){
-			$form = $crud->form;
-			$tags = $fields;
-			$contact_fields = $this->add('xepan\base\Model_Contact')->getActualFields();
-			array_walk($contact_fields,function(&$item){$item = '{$contact_'.$item.'}';});
-			array_walk($tags,function(&$item){$item = '{$'.$item.'}';});
-			
-			$form->add('View')->set(implode(", ", array_merge($tags,$contact_fields)));
-			$t = explode(',', $this['list_data_status']);
-			$f = $form->getElement('on_status');
-			$f->validate_values = false;			
-			$f->setValueList(array_combine($t, $t));
-			
-			$fields = array_combine($fields, $fields);
-
-			$f = $form->getElement('email_send_to_list_data_fields')->setAttr('multiple');
-			$f->validate_values = false;			
-			$f->setValueList($fields);
-			$f->set(explode(',', $form->model['email_send_to_list_data_fields']));
-
-			$f = $form->getElement('sms_send_to_list_data_fields')->setAttr('multiple');
-			$f->validate_values = false;			
-			$f->setValueList($fields);
-			$f->set(explode(',', $form->model['sms_send_to_list_data_fields']));			
-		}
+	function manage_status_activity(){
+		$this->app->redirect($this->app->url('xepan_listing_liststatusactivities',['list_id'=>$this->id]));
 	}
 
 	function plan_management(){
@@ -207,6 +176,7 @@ class Model_List extends \xepan\base\Model_Table{
 	}
 
 	function page_plan_associate_with_user($page){
+		$this->app->stickyGET('list_id');
 		$model = $page->add('xepan\listing\Model_ContactPlanAssociation');
 		$model->addCondition('list_id',$this->id);
 
