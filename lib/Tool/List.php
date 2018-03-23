@@ -137,7 +137,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 		// add download button
 		if($this->options['custom_template'] AND $selector = trim($this->options['download_button_selector'])){
 			$this->on('click',$selector,function($js,$data){
-				$id = $data['list-data-id'];
+				$id = $data['listdataid'];
 				if($this->options['show_detail_if_permitted']){
 					$data_model = $this->listing_model->getDataModel()->load($id);
 					if(!$data_model->isPermitted())
