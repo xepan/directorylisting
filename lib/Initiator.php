@@ -44,4 +44,7 @@ class Initiator extends \Controller_Addon {
 		return $this;
 	}
 
+	function resetDB(){
+	}
+
 }
