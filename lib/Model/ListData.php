@@ -204,6 +204,8 @@ class Model_ListData extends \xepan\base\Model_Table{
 			$creator = $this->ref('created_by_id');
 			$email_array = [];
 			$phone_array = [];
+			
+			
 			if($act['email_send_to_creator'] && $creator->loaded()) $email_array = array_merge($email_array,explode("<br/>", $creator['emails_str']));
 			if($act['sms_send_to_creator'] && $creator->loaded()) $phone_array = array_merge($phone_array,explode("<br/>", $creator['contacts_str']));
 
@@ -215,19 +217,25 @@ class Model_ListData extends \xepan\base\Model_Table{
 				$phone_array[] = $this[$f];
 			}
 
-			$email_array = array_merge($email_array,explode(",", $act['email_send_to_custom_email_ids']));
+			$custom_email_ids = explode(",", trim($act['email_send_to_custom_email_ids']));
+			$email_array = array_merge($email_array,$custom_email_ids);
 			$phone_array = array_merge($phone_array,explode(",", $act['sms_send_to_custom_phone_numbers']));
 
+			// filter empty value to 
+			$email_array = array_filter($email_array, function($value) { return $value !== ''; });
+			$phone_array = array_filter($phone_array, function($value) { return $value !== ''; });
+			
 			$data_array = [];
+			
+			$this->add();
 
 			if($creator->loaded()){
 				foreach ($creator->getActualFields() as $f) {
 					$data_array['creator_'.$f]=$creator[$f];
 				}
 			}
-
+			
 			$data_array = array_merge($data_array,$this->data);
-
 			if(count($email_array)){
 
 				$email_settings = $this->add('xepan\communication\Model_Communication_DefaultEmailSetting')->tryLoadAny();
@@ -252,6 +260,7 @@ class Model_ListData extends \xepan\base\Model_Table{
 				$mail->setfrom($email_settings['from_email'],$email_settings['from_name']);
 
 				foreach ($email_array as $email_id) {
+					if(!trim($email_id)) continue;
 					$mail->addTo($email_id);
 				}
 				$mail->setSubject($subject_v->getHtml());

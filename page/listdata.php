@@ -7,8 +7,8 @@ class page_listdata extends \xepan\base\Page {
 
 	function init(){
 		parent::init();
-
-		$list_id =  $this->app->stickyGET('listid');		
+		
+		$list_id =  $this->app->stickyGET('listid');
 		$m = $this->add('xepan\listing\Model_ListData',['listing'=>$list_id]);
 
 		$crud = $this->add('xepan\hr\CRUD',['grid_options'=>['fixed_header'=>false]]);
@@ -29,6 +29,12 @@ class page_listdata extends \xepan\base\Page {
 		if($crud->isEditing('edit')){
 			$crud->form->getElement('categories')->set($crud->form->model->getAssociatedCategories());
 		}
+
+		$crud->grid->template->trySet('grid_table_class','table-responsive overflow-auto');
+		$order = $crud->grid->addOrder();
+		$order->move('action','first');
+		$order->now();
+		
 	}
 }
 
