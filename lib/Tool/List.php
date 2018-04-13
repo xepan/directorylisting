@@ -8,6 +8,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'list_data_set_id'=>null,
 				'show_data_list'=>'all', //all, new, mostviewed,featured
 				'show_add_button'=>true, // true, false
+				'add_button_name'=>'',
 				'show_edit_button'=>true, // true, false
 				'show_delete_button'=>true, // true, false
 				'show_quick_search'=>true,
@@ -57,6 +58,10 @@ class Tool_List extends \xepan\cms\View_Tool{
 			if($this->options['custom_template'])
 				$this->add('View')->set('List Template not found at : '.$this->getTemplateBasePath())->addClass('alert alert-info');
 			$this->lister = $crud = $this->add('xepan\base\CRUD',['allow_add'=>$this->options['show_add_button'],'allow_edit'=>$this->options['show_edit_button'],'allow_del'=>$this->options['show_delete_button'],'grid_options'=>['add_sno'=>false]]);
+		}
+
+		if(trim($this->options['add_button_name'])){
+			$this->lister->entity_name = trim($this->options['add_button_name']);
 		}
 
 		$this->lister->grid->fixed_header = false;
@@ -267,9 +272,9 @@ class Tool_List extends \xepan\cms\View_Tool{
 		// }
 	}
 
-	function addToolCondition_show_public_fields($value,$model){
-		$this->lister->allow_add = false;
-	}
+	// function addToolCondition_show_public_fields($value,$model){
+	// 	$this->lister->allow_add = false;
+	// }
 
 	function addToolCondition_show_mark_favourite_button($value,$model){
 		if(!$value) return;
