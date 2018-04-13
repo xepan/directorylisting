@@ -227,8 +227,6 @@ class Model_ListData extends \xepan\base\Model_Table{
 			
 			$data_array = [];
 			
-			$this->add();
-
 			if($creator->loaded()){
 				foreach ($creator->getActualFields() as $f) {
 					$data_array['creator_'.$f]=$creator[$f];
