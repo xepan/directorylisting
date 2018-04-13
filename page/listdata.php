@@ -28,9 +28,14 @@ class page_listdata extends \xepan\base\Page {
 
 		if($crud->isEditing('edit')){
 			$crud->form->getElement('categories')->set($crud->form->model->getAssociatedCategories());
+		}else{
+			// crud is editing is not 
+			if($crud->grid->template)
+				$crud->grid->template->trySet('grid_table_class','table-responsive overflow-auto');
 		}
 
-		$crud->grid->template->trySet('grid_table_class','table-responsive overflow-auto');
+		// if($crud->grid->template)
+
 		$order = $crud->grid->addOrder();
 		$order->move('action','first');
 		$order->now();
