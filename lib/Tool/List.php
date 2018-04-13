@@ -30,7 +30,8 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'list_detail_page'=>null,
 				'show_detail_if_permitted'=>false,
 				'show_paginator'=>true,
-				'data_row_limit'=>null
+				'data_row_limit'=>null,
+				'show_list_data_for_created_by_id_of_list'=>false // for this option must pass created_by_id in this param " listcreatedby "
 			];
 	
 	function init(){
@@ -44,6 +45,9 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$this->add('View_Warning')->addClass('alert alert-warning')->set($message);
 			return;
 		}
+
+		// used for show_list_data_created_by_list
+		$list_created_by_id = $this->app->stickyGET('listcreatedby');
 
 		$this->listing_model = $this->add('xepan\listing\Model_List');
 		$this->listing_model->load($this->options['listing_id']);
@@ -86,7 +90,15 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$listdata_model->addCondition('created_by_id',$contact->id);
 			$listdata_model->addCondition('created_by_id','<>',null);
 		}
-		
+
+		// show list of data created by list
+		if($this->options['show_list_data_for_created_by_id_of_list']){			
+			if(!$list_created_by_id) $this->listdata_model->addCondition('id','-1');
+			
+			$this->listdata_model->addCondition('created_by_id',$list_created_by_id);
+		}
+
+
 		if($crud->isEditing() AND $this->options['listing_add_edit_form_layout']){
 			$form_fields = $crud->form->add('xepan\base\Controller_FLC')
 				->addContentSpot()
