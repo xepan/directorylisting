@@ -284,8 +284,8 @@ class Model_ListData extends \xepan\base\Model_Table{
 	}
 
 
-	function generatePDF($action = "return",$layout=null){
-
+	function generatePDF($action = "return",$layout=null,$include_related_contact=false,$related_contact_layout=null){
+		
 		$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		// set document information
 		$pdf->SetCreator(PDF_CREATOR);
@@ -301,15 +301,49 @@ class Model_ListData extends \xepan\base\Model_Table{
 		//remove header or footer hr lines
 		$pdf->SetPrintHeader(false);
 		$pdf->SetPrintFooter(false);
-		// add a page
-		$pdf->AddPage();
 
+		// add a page
 		$template = $this->add('GiTemplate');
 		$template->loadTemplateFromString($layout);
 		
 		$view = $this->add('View',null,null,$template);
 		$view->template->trySet($this->data);
+		
+		// Related Contact Layout
+		$related_html = "";
+		if($include_related_contact){
+			$lister_layout = '<div id="{$_name}" class="{$class} related-contact-rows">{rows}{row}';
+			$lister_layout .= $related_contact_layout;
+			$lister_layout .= '{/}{/}</div>';
+
+			$related_data_model = $this->listing->getDataModel();
+			$related_data_model->addCondition('created_by_id',$this['created_by_id']);
+			$related_data_model->addCondition('id','<>',$this->id);
+
+			$related_template = $this->add('GiTemplate');
+			$related_template->loadTemplateFromString($lister_layout);
+
+			if($template->hasTag('related_contact')){
+				$related_list_view = $view->add('CompleteLister',null,'related_contact',$related_template);
+			}else{
+				$related_list_view = $this->add('CompleteLister',null,null,$related_template);
+			}
+			$related_list_view->setModel($related_data_model);
+
+			if(!$template->hasTag('related_contact')){
+				$related_html = $related_list_view->getHtml();
+			}
+		}
+
+
 		$html = $view->getHTML();
+
+		if($related_html){
+			$html .= $related_html;
+		}
+
+
+		$pdf->AddPage();
 		$pdf->writeHTML($html, false, false, true, false, '');
 		// set default form properties
 		$pdf->setFormDefaultProp(array('lineWidth'=>1, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 200), 'strokeColor'=>array(255, 128, 128)));
@@ -370,7 +404,28 @@ class Model_ListData extends \xepan\base\Model_Table{
 
 	function page_print_document($page){
 		$page->add('View')->set('Print Document');
+		$form = $page->add('Form');
+		$form->addField('checkbox','include_related_contact')->set(0);
+		$form->addSubmit('Print Document');
 
+		if($form->isSubmitted()){
+			$this->print_document($form['include_related_contact']);
+		}
+
+	}
+
+	function print_document($include_related_contact=false){
+		$this->app->js(true)->univ()
+			->newWindow(
+				$this->app->url('xepan_listing_listdatadownload',
+								[
+									'listing_id'=>$this->listing->id,
+									'list_data_id'=>$this->id,
+									'related_contact'=>$include_related_contact,
+									'action'=>'print'
+								]),
+				'PrintListData-'.$this->id
+			)->execute();
 	}
 
 }

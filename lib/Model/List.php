@@ -19,6 +19,7 @@ class Model_List extends \xepan\base\Model_Table{
 		$this->addField('status')->enum(['Active','InActive'])->defaultValue('Active');
 		$this->addField('list_data_download_layout')->type('text')->display(['form'=>'xepan\base\RichText']);
 		$this->addField('list_data_print_layout')->type('text')->display(['form'=>'xepan\base\RichText']);
+		$this->addField('related_list_data_print_layout')->type('text')->display(['form'=>'xepan\base\RichText']);
 
 		$this->is(['name|to_trim|required']);
 
@@ -205,10 +206,13 @@ class Model_List extends \xepan\base\Model_Table{
 		$form_pl = $pl->add('Form');
 		$pl_field = $form_pl->addField('xepan\base\RichText','list_data_print_layout');
 		$pl_field->set($this['list_data_print_layout']);
+		$rpl_field = $form_pl->addField('xepan\base\RichText','related_list_data_print_layout');
+		$rpl_field->set($this['related_list_data_print_layout']);
 
 		$form_pl->addSubmit('Submit');
 		if($form_pl->isSubmitted()){
 			$this['list_data_print_layout'] = $form_pl['list_data_print_layout'];
+			$this['related_list_data_print_layout'] = $form_pl['related_list_data_print_layout'];
 			$this->save();
 			$this->app->page_action_result = $this->app->js(null,$page->js()->univ()->closeDialog())->univ()->successMessage('Updated Successfully');
 		}
