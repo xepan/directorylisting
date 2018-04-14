@@ -5,11 +5,14 @@ namespace xepan\listing;
 class page_listdata extends \xepan\base\Page {
 	public $title='List Data';
 
+	public $list_id; // list id 
+	public $list_data_model; // list data model
+
 	function init(){
 		parent::init();
 		
-		$list_id =  $this->app->stickyGET('listid');
-		$m = $this->add('xepan\listing\Model_ListData',['listing'=>$list_id]);
+		$this->list_id = $list_id =  $this->app->stickyGET('listid');
+		$this->list_data_model = $m = $this->add('xepan\listing\Model_ListData',['listing'=>$list_id]);
 
 		$crud = $this->add('xepan\hr\CRUD',['grid_options'=>['fixed_header'=>false]]);
 		if($crud->isEditing()){
@@ -40,6 +43,29 @@ class page_listdata extends \xepan\base\Page {
 		$order->move('action','first');
 		$order->now();
 		
+
+		$print_btn = $crud->grid->addButton('Print All Record')->addClass('btn btn-warning');
+		$print_btn->add('VirtualPage')
+		->bindEvent('Print all Record','click')
+		->set(function($page){
+			$form = $page->add('Form');
+			$form->addField('checkbox','include_related_contact');
+			$form->addSubmit('Go');
+			if($form->isSubmitted()){
+				$this->app->js(true)->univ()
+					->newWindow(
+					$this->app->url('xepan_listing_listdatadownload',
+									[
+										'listing_id'=>$this->list_id,
+										'related_contact'=>$form['include_related_contact'],
+										'action'=>'html',
+										'all_record'=>1
+									]),
+					'PrintAllListData'
+				)->execute();
+			}
+		});
+
 	}
 }
 

@@ -284,7 +284,7 @@ class Model_ListData extends \xepan\base\Model_Table{
 	}
 
 
-	function generatePDF($action = "return",$layout=null,$include_related_contact=false,$related_contact_layout=null){
+	function generatePDF($action = "return",$layout=null,$include_related_contact=false,$related_contact_layout=null,$return_html_only=false){
 		
 		$pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		// set document information
@@ -337,9 +337,11 @@ class Model_ListData extends \xepan\base\Model_Table{
 
 
 		$html = $view->getHTML();
-
 		if($related_html){
 			$html .= $related_html;
+		}
+		if($return_html_only){
+			return $html;
 		}
 
 
