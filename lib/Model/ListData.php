@@ -39,7 +39,7 @@ class Model_ListData extends \xepan\base\Model_Table{
 		$this->status = $status = explode(",",$this->listing['list_data_status']);
 		// actions
 		foreach ($status as $key => $value) {
-			$this->actions[$value] = ['view','change_status','execute_action','edit','delete'];
+			$this->actions[$value] = ['view','change_status','execute_action','print_document','edit','delete'];
 		}
 		
 		parent::init();
@@ -142,8 +142,9 @@ class Model_ListData extends \xepan\base\Model_Table{
 			$this->save();
 			return true;
 		}
-
 	}
+
+
 
 	// ACL will call it and listing must be passed again to be exact same newInsatnce of current model
 	function newInstance($properties = null)
@@ -365,6 +366,11 @@ class Model_ListData extends \xepan\base\Model_Table{
 		}
 
 		return false;
+	}
+
+	function page_print_document($page){
+		$page->add('View')->set('Print Document');
+
 	}
 
 }

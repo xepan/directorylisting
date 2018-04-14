@@ -18,6 +18,7 @@ class Model_List extends \xepan\base\Model_Table{
 		$this->addField('list_data_status')->type('text')->hint('comma (,) seperated multiple values i.e. Pending,Approved,Rejected');
 		$this->addField('status')->enum(['Active','InActive'])->defaultValue('Active');
 		$this->addField('list_data_download_layout')->type('text')->display(['form'=>'xepan\base\RichText']);
+		$this->addField('list_data_print_layout')->type('text')->display(['form'=>'xepan\base\RichText']);
 
 		$this->is(['name|to_trim|required']);
 
@@ -189,6 +190,7 @@ class Model_List extends \xepan\base\Model_Table{
 	function page_configuration($page){
 		$tab = $page->add('Tabs');
 		$dt = $tab->addTab('List Data Download Layout');
+		$pl = $tab->addTab('List Data Print Layout');
 
 		$form = $dt->add('Form');
 		$form->addField('xepan\base\RichText','list_data_download_layout')->set($this['list_data_download_layout']);
@@ -199,5 +201,17 @@ class Model_List extends \xepan\base\Model_Table{
 			$this->save();
 			$this->app->page_action_result = $this->app->js(null,$page->js()->univ()->closeDialog())->univ()->successMessage('Updated Successfully');
 		}
+
+		$form_pl = $pl->add('Form');
+		$pl_field = $form_pl->addField('xepan\base\RichText','list_data_print_layout');
+		$pl_field->set($this['list_data_print_layout']);
+
+		$form_pl->addSubmit('Submit');
+		if($form_pl->isSubmitted()){
+			$this['list_data_print_layout'] = $form_pl['list_data_print_layout'];
+			$this->save();
+			$this->app->page_action_result = $this->app->js(null,$page->js()->univ()->closeDialog())->univ()->successMessage('Updated Successfully');
+		}
+
 	}
 }	
