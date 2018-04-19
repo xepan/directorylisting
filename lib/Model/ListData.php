@@ -337,9 +337,10 @@ class Model_ListData extends \xepan\base\Model_Table{
 
 
 		$html = $view->getHTML();
-		if($related_html){
-			$html .= $related_html;
-		}
+		// if($related_html){
+		$html .= $related_html;
+		// }
+
 		if($return_html_only){
 			return $html;
 		}

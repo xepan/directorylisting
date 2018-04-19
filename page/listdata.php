@@ -48,9 +48,18 @@ class page_listdata extends \xepan\base\Page {
 		$print_btn->add('VirtualPage')
 		->bindEvent('Print all Record','click')
 		->set(function($page){
+
+			$data_set_model = $this->add('xepan\listing\Model_ListDataSet');
+			$data_set_model->addCondition('list_id',$this->list_id);
+
 			$form = $page->add('Form');
+			$data_set_field = $form->addField('DropDown','data_set_condition');
+			$data_set_field->setModel($data_set_model);
+			$data_set_field->setEmptyText('Please Select Data Set Condition');
 			$form->addField('checkbox','include_related_contact');
+
 			$form->addSubmit('Go');
+
 			if($form->isSubmitted()){
 				$this->app->js(true)->univ()
 					->newWindow(
@@ -59,7 +68,8 @@ class page_listdata extends \xepan\base\Page {
 										'listing_id'=>$this->list_id,
 										'related_contact'=>$form['include_related_contact'],
 										'action'=>'html',
-										'all_record'=>1
+										'all_record'=>1,
+										'data_set_id'=>$form['data_set_condition']
 									]),
 					'PrintAllListData'
 				)->execute();
