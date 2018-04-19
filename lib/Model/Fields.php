@@ -185,7 +185,7 @@ class Model_Fields extends \xepan\base\Model_Table{
 				$type = "text";
 				break;
 			case 'checkbox':
-				$type = "checkbox";
+				$type = "boolean";
 				break;
 			case 'DatePicker':
 				$type = "datetime";
