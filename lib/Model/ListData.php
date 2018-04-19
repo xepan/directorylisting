@@ -39,7 +39,7 @@ class Model_ListData extends \xepan\base\Model_Table{
 		$this->status = $status = explode(",",$this->listing['list_data_status']);
 		// actions
 		foreach ($status as $key => $value) {
-			$this->actions[$value] = ['view','change_status','execute_action','print_document','edit','delete'];
+			$this->actions[$value] = ['view','change_status','execute_action','print_document','related_data','edit','delete'];
 		}
 		
 		parent::init();
@@ -144,6 +144,17 @@ class Model_ListData extends \xepan\base\Model_Table{
 		}
 	}
 
+	function page_related_data($page){
+		$model = $this->add('xepan\listing\Model_ListData',['listing'=>$this->listing->id]);
+		$model->addCondition('created_by_id',$this['created_by_id']);
+		$model->addCondition('id','<>',$this->id);
+		$crud = $page->add('xepan\hr\CRUD');
+		$crud->setModel($model);
+
+		$order = $crud->grid->addOrder();
+		$order->move('action','first');
+		$order->now();
+	}
 
 
 	// ACL will call it and listing must be passed again to be exact same newInsatnce of current model

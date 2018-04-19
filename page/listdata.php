@@ -42,7 +42,6 @@ class page_listdata extends \xepan\base\Page {
 		$order = $crud->grid->addOrder();
 		$order->move('action','first');
 		$order->now();
-		
 
 		$print_btn = $crud->grid->addButton('Print All Record')->addClass('btn btn-warning');
 		$print_btn->add('VirtualPage')
@@ -76,6 +75,42 @@ class page_listdata extends \xepan\base\Page {
 			}
 		});
 
+
+		// apply filter data
+		$filter_form = $crud->grid->addQuickSearch([]);
+
+		$data_set_model = $this->add('xepan\listing\Model_ListDataSet');
+		$data_set_model->addCondition('list_id',$this->list_id);
+
+		$condition_filter_field = $filter_form->addField('DropDown','data_set_condition');
+		$condition_filter_field->setModel($data_set_model);
+		$condition_filter_field->setEmptyText('Select Filter');
+
+		$filter_form->addHook('applyFilter',function($f,$m){
+			if($f['data_set_condition']){
+				$conditions = $this->add('xepan\listing\Model_ListDataSetCondition')
+						->addCondition('list_data_set_id',$f['data_set_condition']);
+
+				foreach ($conditions as $condition) {
+					$field_db_name = $condition->ref('filter_effected_field_id')
+										->dbColumnName();
+
+					$value = $condition['value'];
+					if($condition['operator'] == "in"){
+						$value = explode(",", $value);
+					}
+
+					$operator = $condition['operator'];
+					if($condition['operator'] == "contains"){
+						$value = "%$value%";
+						$operator = "like";
+					}
+					$m->addCondition($field_db_name,$operator,$value);
+				}
+			}
+		});
+
+		$condition_filter_field->js('change',$filter_form->js()->submit());
 	}
 }
 
