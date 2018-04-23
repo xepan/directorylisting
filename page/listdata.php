@@ -81,8 +81,10 @@ class page_listdata extends \xepan\base\Page {
 		$filter_form->getElement('q')->setAttr('style','display:none;');
 
 		$filter_form->addClass('atk-form atk-form-stacked atk-form-compact atk-move-right');
-        $filter_form->template->trySet('fieldset', 'atk-row');
-        $filter_form->template->tryDel('button_row');
+        if($filter_form->template){
+	        $filter_form->template->trySet('fieldset', 'atk-row');
+	        $filter_form->template->tryDel('button_row');
+        }
 
 		$data_set_model = $this->add('xepan\listing\Model_ListDataSet');
 		$data_set_model->addCondition('list_id',$this->list_id);
