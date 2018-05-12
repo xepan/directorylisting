@@ -207,12 +207,25 @@ class Model_ListData extends \xepan\base\Model_Table{
 
 	function shootStatusAction($status=null){
 		if(!$status) $status=$this['status'];
+
 		$actions  = $this->add('xepan\listing\Model_ListingStatusActivity');
 		$actions->addCondition('list_id',$this->listing->id);
 		$actions->addCondition('on_status',$status);
 		$actions->addCondition('status','Active');
 
 		foreach ($actions as $act) {
+			
+			// check if status activity has data set id
+			// then check status activity condition
+				// ($list_dataset_id,$list_data_model=null,$return="model")
+			if($act['list_dataset_id']){
+				$data_model = $this->newInstance();
+				$model = $this->applyListDataSet($act['list_dataset_id'],$data_model,$return='model');
+				$model->addCondition('id',$this->id);
+				$model->tryLoadAny();
+				if($model->loaded()) continue;
+			}
+
 			$creator = $this->ref('created_by_id');
 			$email_array = [];
 			$phone_array = [];
@@ -442,4 +455,39 @@ class Model_ListData extends \xepan\base\Model_Table{
 			)->execute();
 	}
 
+
+	// return = model, boolean
+	function applyListDataSet($list_dataset_id,$list_data_model=null,$return="boolean"){
+		
+		if($list_data_model == null)
+			$list_data_model = $this;
+
+		$conditions = $this->add('xepan\listing\Model_ListDataSetCondition')
+			->addCondition('list_data_set_id',$list_dataset_id);
+
+		foreach ($conditions as $condition) {
+			$field_db_name = $condition->ref('filter_effected_field_id')->dbColumnName();
+
+			$value = $condition['value'];
+			if($condition['operator'] == "in"){
+				$value = explode(",", $value);
+			}
+
+			$operator = $condition['operator'];
+			if($condition['operator'] == "contains"){
+				$value = "%$value%";
+				$operator = "like";
+			}
+			
+			$list_data_model->addCondition($field_db_name,$operator,$value);
+		}
+
+		// true or false if condition applied or not
+		if($return == "boolean")
+			return $list_data_model->count()->getOne();
+
+		if($return == "model")
+			return $list_data_model;
+
+	}
 }

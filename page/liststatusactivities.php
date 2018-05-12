@@ -16,8 +16,9 @@ class page_liststatusactivities extends \xepan\base\Page {
 		$model = $this->add('xepan\listing\Model_ListingStatusActivity');
 		$model->addCondition('list_id',$_GET['list_id']);
 		$crud = $this->add('xepan\hr\CRUD');
-		$crud->setModel($model);
-
+		$crud->setModel($model,null,['on_status','email_subject','email_send_to_creator','email_send_to_list_data_fields','email_send_to_custom_email_ids','sms_content','sms_send_to_creator','sms_send_to_list_data_fields','sms_send_to_custom_phone_numbers','status','list_dataset']);
+		$crud->grid->removeAttachment();
+		$crud->grid->removeColumn("status");
 		$fields = $list_model->getDataModel()->getActualFields();
 		
 		if($crud->isEditing()){
@@ -44,6 +45,8 @@ class page_liststatusactivities extends \xepan\base\Page {
 			$f->validate_values = false;			
 			$f->setValueList($fields);
 			$f->set(explode(',', $form->model['sms_send_to_list_data_fields']));			
+
+			$form->getElement('list_dataset_id')->getModel()->addCondition('list_id',$_GET['list_id']);
 		}
 	}
 }

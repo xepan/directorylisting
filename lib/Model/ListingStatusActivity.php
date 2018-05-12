@@ -16,6 +16,8 @@ class Model_ListingStatusActivity extends \xepan\base\Model_Table{
 		parent::init();
 
 		$this->hasOne('xepan\listing\Model_List','list_id');
+		$this->hasOne('xepan\listing\Model_ListDataSet','list_dataset_id')->caption('Not Send If This Condition Match');
+
 		$this->addField('on_status')->display(array('form'=>'xepan\base\NoValidateDropDown'));
 		$this->addField('email_subject');
 		$this->addField('email_body')->type('text')->display(array('form'=>'xepan\base\RichText'));
