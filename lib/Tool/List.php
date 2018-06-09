@@ -22,6 +22,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'filter_values'=>null,
 				'list_of_categories'=>null, // comma seperated multiple values
 				'display_sequence'=>'lifo', //either fifo, alphabetasc, alphabetdesc
+				'display_sequence_based_on'=>'id',
 				'show_detail_button'=>true, // true, false
 				'custom_template'=>'', // define your custom templates
 				'listing_add_edit_form_layout'=>0,
@@ -130,11 +131,19 @@ class Tool_List extends \xepan\cms\View_Tool{
 		}
 
 		if($this->options['display_sequence']){
-			$order = 'desc';
-			if($this->options['display_sequence'] == 'fifo')
+			$order = $this->options['display_sequence'];
+			$field = $this->options['display_sequence_based_on']?:'id';
+			if($this->options['display_sequence'] == 'fifo'){
 				$order = "asc";
+				$field = 'id';
+			}
+			if($this->options['display_sequence'] == 'lifo'){
+				$order = "desc";
+				$field = 'id';
+			}
 
-			$listdata_model->setOrder('id',$order);
+			// $listdata_model->setOrder('name','asc');
+			$listdata_model->setOrder($field,$order);
 		}
 
 		// add paginator

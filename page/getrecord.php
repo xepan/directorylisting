@@ -80,5 +80,18 @@ class page_getrecord extends \Page {
 		exit;	
 	}
 
+	function page_listingactualfields(){
+
+		$listdata_model = $this->add('xepan\listing\Model_ListData',['listing'=>$this->options['listing_id']]);
+		$fields = $listdata_model->getActualFields();
+		$fields  = array_merge($fields,$fields);
+		$option = "<option value='0'>Please Select </option>";
+		foreach ($fields as $key => $value){
+			$option .= "<option value='".$key."'>".$value."</option>";
+		}
+
+		echo $option;
+		exit;
+	}
 }
 

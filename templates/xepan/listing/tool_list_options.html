@@ -233,9 +233,18 @@
                   <select id="display_sequence" data-attr="display_sequence" data-defaultvalue="desc">
                     <option value="lifo">Recently Added First</option>
                     <option value="fifo">First Added First</option>
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+
                     <!-- <option value="alphabetasc">Alphabet Ascending </option> -->
                     <!-- <option value="alphabetdesc">Alphabet Descending </option> -->
                   </select>
+                </td>
+              </tr>
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-value">
+                  <div class="xepan-tool-option-title">Display Sequence Based On</div>
+                  <input id="display_sequence_based_on" data-attr="display_sequence_based_on" data-defaultvalue="id" />
                 </td>
               </tr>
 
@@ -378,6 +387,17 @@
           }
         });
         // $('.chosen-choices').css('width','120px');
+
+        // get list data model fields 
+        // $.ajax({
+        //   url: 'index.php?page=xepan_listing_getrecord_listingactualfields',
+        //   type: 'GET',
+        //   data: {'listing_id':$(this).val() },
+        //   success: function ( data ){
+        //     $('#{$_name} #display_sequence_based_on').html(data);
+        //     $('#{$_name} #display_sequence_based_on').set($(current_selected_component).attr('display_sequence_based_on'));
+        //   }
+        // });
       }); 
 
       $('#{$_name}').on('show',function(event){
