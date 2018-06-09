@@ -78,8 +78,20 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 			];
 		}
 
-		$form->addSubmit('Submit');
+		$submit_btn = $form->addSubmit('Submit');
+		$reset_btn = $form->addSubmit('Reset');
 		if($form->isSubmitted()){
+
+			if($form->isClicked($reset_btn)){
+				$existing_filter_data = $this->app->recall('listing_fiter_data',[]);
+				if(isset($existing_filter_data[$this->list_model->id])){
+					unset($existing_filter_data[$this->list_model->id]);
+					$this->app->memorize('listing_fiter_data',$existing_filter_data);
+				}
+				if($this->options['result_page']) $this->app->redirect($this->app->url($this->options['result_page']));
+				if($this->options['reload_class']) $this->js(null,$form->js()->reload())->_selector($this->options['reload_class'].'>*')->trigger('reload')->execute();
+				$form->js()->reload()->execute();
+			}
 
 			foreach ($this->filter_data_list as $key => $value) {
 				if(!$form[$value['form_field_name']]){

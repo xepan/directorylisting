@@ -312,7 +312,13 @@
             $('#{$_name} #listing_status_to_show').html(data);
             $('#{$_name} #listing_status_to_show').chosen();
             $('#{$_name} #listing_status_to_show').chosen({allow_single_deselect: true });
-            $('#{$_name} #listing_status_to_show').val($(current_selected_component).attr('status_to_show'));
+            
+            if(typeof $(current_selected_component).attr('status_to_show') === 'undefined' ){
+              $("#{$_name} #listing_status_to_show").val("\{\}").trigger("chosen:updated");
+            }else{
+              var str = $(current_selected_component).attr('status_to_show');
+              $("#{$_name} #listing_status_to_show").val(str.split(',')).trigger("chosen:updated");
+            }
           }
         });
 
@@ -325,7 +331,13 @@
             $('#{$_name} #list_of_categories').html(data);
             $('#{$_name} #list_of_categories').chosen();
             $('#{$_name} #list_of_categories').chosen({allow_single_deselect: true });
-            $('#{$_name} #list_of_categories').val($(current_selected_component).attr('list_of_categories'));
+
+            if(typeof $(current_selected_component).attr('list_of_categories') === 'undefined' ){
+              $("#{$_name} #list_of_categories").val("\{\}").trigger("chosen:updated");
+            }else{
+              var str = $(current_selected_component).attr('list_of_categories');
+              $("#{$_name} #list_of_categories").val(str.split(',')).trigger("chosen:updated");
+            }
           }
         });
 
@@ -357,7 +369,12 @@
             $('#{$_name} #listing-filter-affected-values').html(data);
             $('#{$_name} #listing-filter-affected-values').chosen();
             $('#{$_name} #listing-filter-affected-values').chosen({allow_single_deselect: true });
-            $('#{$_name} #listing-filter-affected-values').val($(current_selected_component).attr('filter_values'));
+            if(typeof $(current_selected_component).attr('filter_values') === 'undefined' ){
+              $("#{$_name} #listing-filter-affected-values").val("\{\}").trigger("chosen:updated");
+            }else{
+              var str = $(current_selected_component).attr('filter_values');
+              $("#{$_name} #listing-filter-affected-values").val(str.split(',')).trigger("chosen:updated");
+            }
           }
         });
         // $('.chosen-choices').css('width','120px');
@@ -388,10 +405,20 @@
         //- chosen multiselect options
         if(typeof $(current_selected_component).attr('show_item_of_category') === 'undefined' ){
           $("#{$_name} .multiselect").val("\{\}").trigger("chosen:updated");
+          // $(current_selected_component).attr('filter_values')
         }else{
           var str = $(current_selected_component).attr('show_item_of_category');
           $("#{$_name} .multiselect").val(str.split(',')).trigger("chosen:updated");
         }
+
+        // filter values
+        if(typeof $(current_selected_component).attr('filter_values') === 'undefined' ){
+          $("#{$_name} #listing-filter-affected-values").val("\{\}").trigger("chosen:updated");
+        }else{
+          var str = $(current_selected_component).attr('filter_values');
+          $("#{$_name} #listing-filter-affected-values").val(str.split(',')).trigger("chosen:updated");
+        }
+
       });
     </script>
 </div>
