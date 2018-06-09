@@ -31,10 +31,13 @@ class Form_ManageListData extends \Form {
 				continue;
 			} 
 			
-			$field_name = $field->dbColumnName();
+			if($field['field_type'] == "Expression") continue;
+			elseif($field['field_type'] == "email") $field['field_type'] = "Line";
 
+			$field_name = $field->dbColumnName();
+			
 			if($field['field_type'] == "Upload"){
-				$f = $this->addField('xepan\filestore\Field_File',$field_name,$field['name']);
+				// $f = $this->addField('xepan\filestore\Field_File',$field_name,$field['name']);
 			}else{
 				$f = $this->addField($field['field_type'],$field_name,$field['name']);
 			}

@@ -79,7 +79,7 @@ class Tool_Filter extends \xepan\cms\View_Tool{
 		}
 
 		$submit_btn = $form->addSubmit('Submit');
-		$reset_btn = $form->addSubmit('Reset');
+		$reset_btn = $form->addSubmit('Clear');
 		if($form->isSubmitted()){
 
 			if($form->isClicked($reset_btn)){
