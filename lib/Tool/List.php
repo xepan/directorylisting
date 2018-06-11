@@ -90,11 +90,15 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$listdata_model->getElement('created_by_id')->set($contact->id);
 		}
 		
-		if($this->options['show_list_data_created_by_login_user'] AND $contact->loaded() ){
-			$listdata_model->addCondition('created_by_id',$contact->id);
+		if($this->options['show_list_data_created_by_login_user']){
+			if($contact->loaded() )
+				$listdata_model->addCondition('created_by_id',$contact->id);
+			else{
+				$listdata_model->addCondition('created_by_id',"-1");
+				$this->add('View_Error')->set('Contact not found, not a valid user')->addClass('alert alert-danger');
+			}
+
 			// $listdata_model->addCondition('created_by_id','<>',null);
-		}else{
-			$listdata_model->addCondition('created_by_id','-1');
 		}
 
 		// show list of data created by list
