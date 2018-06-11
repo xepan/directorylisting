@@ -82,22 +82,23 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$this->applyListDataSetCondition();
 		}
 
-		$contact = $this->add('xepan\base\Model_Contact')
-					->addCondition('user_id',$this->app->auth->model->id)
-					->tryLoadAny();
+		$contact = $this->add('xepan\base\Model_Contact');
+		$contact->loadLoggedIn() ;
 
 		// if_allow add
 		if($this->options['show_add_button']){
 			$listdata_model->getElement('created_by_id')->set($contact->id);
 		}
 		
-		if($this->options['show_list_data_created_by_login_user']){
+		if($this->options['show_list_data_created_by_login_user'] AND $contact->loaded() ){
 			$listdata_model->addCondition('created_by_id',$contact->id);
-			$listdata_model->addCondition('created_by_id','<>',null);
+			// $listdata_model->addCondition('created_by_id','<>',null);
+		}else{
+			$listdata_model->addCondition('created_by_id','-1');
 		}
 
 		// show list of data created by list
-		if($this->options['show_list_data_for_created_by_id_of_list']){			
+		if($this->options['show_list_data_for_created_by_id_of_list']){
 			if(!$list_created_by_id) $this->listdata_model->addCondition('id','-1');
 			
 			$this->listdata_model->addCondition('created_by_id',$list_created_by_id);
@@ -163,8 +164,8 @@ class Tool_List extends \xepan\cms\View_Tool{
 		}
 
 		if($crud->isEditing('edit') OR $crud->isEditing('add')){
-			// $is_array = $this->getValidationList();
-			// $listdata_model->is(['name|to_trim|required']);
+			$is_array = $this->getValidationList();
+			$listdata_model->is($is_array);
 		}
 
 
@@ -405,7 +406,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 			if($listing_layout_model->loaded() && !in_array($field_name, $fields_in_layout)) continue;
 			if($field['field_type'] == "Expression" OR !$field['is_mandatory']) continue;
 
-			$is = "'".$field_name."|to_trim|required";
+			$is = $field_name."|to_trim|required";
 			$validate[$is] = $is;
 		}
 

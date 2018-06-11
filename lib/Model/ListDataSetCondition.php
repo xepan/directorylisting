@@ -16,7 +16,7 @@ class Model_ListDataSetCondition extends \xepan\base\Model_Table{
 
 		$this->hasOne('xepan\listing\Model_ListDataSet','list_data_set_id');
 		$this->hasOne('xepan\listing\Model_Fields','filter_effected_field_id');
-		$this->addField('operator')->enum(['>','<','>=','<=','=','contains','in']);
+		$this->addField('operator')->enum(['>','<','>=','<=','=','contains','in','!=']);
 		$this->addField('value');
 		
 		$this->add('dynamic_model\Controller_AutoCreator');
