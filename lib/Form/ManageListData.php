@@ -32,6 +32,7 @@ class Form_ManageListData extends \Form {
 			$this->list_data_model->tryLoadAny();
 		}
 
+		
 		$fields_in_layout=[];
 		if($this->listing_layout_model->loaded()){
 			$fields_in_layout = $this->listing_layout_model->getFields();
@@ -73,17 +74,17 @@ class Form_ManageListData extends \Form {
 
 		$this->addSubmit($this->options['save_button_caption'])->addClass($this->options['save_button_class']);
 		if($this->isSubmitted()){
-			foreach ($this->list_model->fields() as $field) {
-				if($this->listing_layout_model->loaded() && !in_array($field->dbColumnName(), $fields_in_layout)){
-					continue;
-				} 
+			// foreach ($this->list_model->fields() as $field) {
+			// 	if($this->listing_layout_model->loaded() && !in_array($field->dbColumnName(), $fields_in_layout)){
+			// 		continue;
+			// 	} 
 				
-				$field_name = $field->dbColumnName();
-				$this->list_data_model[$field_name] = $this[$field_name];
-			}
-
-			$this->list_data_model->save();
-			$this->js(null,$this->js()->univ()->successMessage('DONE'))->reload()->execute();
+			// 	$field_name = $field->dbColumnName();
+			// 	$this->list_data_model[$field_name] = $this[$field_name];
+			// }
+			$this->save();
+			// $this->list_data_model->saveAndUnload();
+			$this->js(null,$this->js()->univ()->successMessage('Saved Successfully'))->reload()->execute();
 		}
 	}
 
