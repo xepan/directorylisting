@@ -158,9 +158,15 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$listdata_model->setLimit($limit);
 		}
 
-		if($crud->isEditing('add')){
+		if($crud->isEditing('add') AND $this->options['default_data_add_status']){
 			$listdata_model->addCondition('status',$this->options['default_data_add_status']);
 		}
+
+		if($crud->isEditing('edit') OR $crud->isEditing('add')){
+			// $is_array = $this->getValidationList();
+			// $listdata_model->is(['name|to_trim|required']);
+		}
+
 
 		$crud->setModel($listdata_model,isset($form_fields)?$form_fields:array_keys($fields),array_keys($fields));
 
@@ -382,4 +388,27 @@ class Tool_List extends \xepan\cms\View_Tool{
 		return $this->lister->template->origin_filename;
 	}
 
+	function getValidationList(){
+
+		$listing_layout_model = $this->add('xepan\listing\Model_ListDataFormLayout');
+		$fields_in_layout=[];
+		if($this->options['listing_add_edit_form_layout']){
+			$listing_layout_model->tryLoad($this->options['listing_add_edit_form_layout']);
+			if($listing_layout_model->loaded())
+				$fields_in_layout = $listing_layout_model->getFields();
+		}
+
+		$form = $this->lister->form;
+		$validate = [];
+		foreach ($this->listing_model->fields() as $field) {
+			$field_name = $field->dbColumnName();
+			if($listing_layout_model->loaded() && !in_array($field_name, $fields_in_layout)) continue;
+			if($field['field_type'] == "Expression" OR !$field['is_mandatory']) continue;
+
+			$is = "'".$field_name."|to_trim|required";
+			$validate[$is] = $is;
+		}
+
+		return $validate;
+	}
 }
