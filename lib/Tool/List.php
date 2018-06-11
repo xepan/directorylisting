@@ -18,6 +18,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'show_mark_favourite_button'=>true, // true, false
 				'show_list_data_created_by_login_user'=>false,
 				'status_to_show'=>null, //comma seperated multiple values
+				'default_data_add_status'=>null,
 				'is_filter_affected'=>true, // true, false
 				'filter_values'=>null,
 				'list_of_categories'=>null, // comma seperated multiple values
@@ -38,7 +39,10 @@ class Tool_List extends \xepan\cms\View_Tool{
 	function init(){
 		parent::init();
 
-		if($this->owner instanceof \AbstractController) return;
+		if($this->owner instanceof \AbstractController){
+			$this->add('View_Warning')->set('Please Select It\'s Options First, by double clicking on it');
+			return;
+		}
 
 		$this->js('reload')->reload();
 
@@ -154,11 +158,16 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$listdata_model->setLimit($limit);
 		}
 
+		if($crud->isEditing('add')){
+			$listdata_model->addCondition('status',$this->options['default_data_add_status']);
+		}
+
 		$crud->setModel($listdata_model,isset($form_fields)?$form_fields:array_keys($fields),array_keys($fields));
 
 		if($crud->isEditing('edit') && $this->options['listing_add_allow_category_selection']){
 			$crud->form->getElement('categories')->set($crud->form->model->getAssociatedCategories());
 		}
+
 
 		// add download button
 		if($this->options['custom_template'] AND $selector = trim($this->options['download_button_selector'])){

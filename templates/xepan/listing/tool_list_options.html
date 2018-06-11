@@ -63,6 +63,15 @@
                   </select>
                 </td>
               </tr>
+              <!-- add status filter -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-value">
+                  <div class="xepan-tool-option-title">Data Add Status</div>
+                  <select id="listing_default_data_add_status" data-attr="default_data_add_status" ></select>
+                  </select>
+                </td>
+              </tr>
+
               <!-- Custom add Button name -->
               <tr class="xepan-tool-option">
                 <td class="xepan-tool-option-value">
@@ -319,6 +328,9 @@
           data: {'listing_id':$(this).val() },
           success: function ( data ){
             $('#{$_name} #listing_status_to_show').html(data);
+            $('#{$_name} #listing_default_data_add_status').html(data);
+            $('#{$_name} #listing_default_data_add_status').val($(current_selected_component).attr('default_data_add_status'));
+
             $('#{$_name} #listing_status_to_show').chosen();
             $('#{$_name} #listing_status_to_show').chosen({allow_single_deselect: true });
             
