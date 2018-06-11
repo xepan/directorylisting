@@ -12,13 +12,25 @@ class Initiator extends \Controller_Addon {
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js'))
 			->setBaseURL('../vendor/xepan/listing/');
 
-		$this->app->listing_menu = $this->app->top_menu->addMenu('Listing');
-		// $this->app->listing_menu->addItem(['Contact','icon'=>' fa fa-sitemap'],'xepan_listing_contact');
-		$this->app->listing_menu->addItem(['Listing List','icon'=>' fa fa-file-text-o'],'xepan_listing_list');
-		// $this->app->listing_menu->addItem(['Listing Fields','icon'=>' fa fa-file-text-o'],'xepan_listing_field');
+		if($this->app->inConfigurationMode)
+            $this->populateConfigurationMenus();
+        else
+            $this->populateApplicationMenus();
 		
 		return $this;
 
+	}
+
+	function populateConfigurationMenus(){
+	}
+
+	function populateApplicationMenus(){
+		if(!$this->app->getConfig('hidden_xepan_listing',false)){
+			$this->app->listing_menu = $this->app->top_menu->addMenu('Listing');
+			// $this->app->listing_menu->addItem(['Contact','icon'=>' fa fa-sitemap'],'xepan_listing_contact');
+			$this->app->listing_menu->addItem(['Listing List','icon'=>' fa fa-file-text-o'],'xepan_listing_list');
+			// $this->app->listing_menu->addItem(['Listing Fields','icon'=>' fa fa-file-text-o'],'xepan_listing_field');
+		}
 	}
 
 	function setup_pre_frontend(){
