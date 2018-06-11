@@ -42,34 +42,36 @@ class Form_ManageListData extends \Form {
 		}
 
 		$this->setModel($this->list_data_model,$fields_in_layout);
-		// foreach ($this->list_model->fields() as $field) {
-		// 	if($this->listing_layout_model->loaded() && !in_array($field->dbColumnName(), $fields_in_layout)){
-		// 		continue;
-		// 	} 
+
+		// validation applied
+		foreach ($this->list_model->fields() as $field) {
+			if($this->listing_layout_model->loaded() && !in_array($field->dbColumnName(), $fields_in_layout)){
+				continue;
+			} 
 			
-		// 	if($field['field_type'] == "Expression") continue;
-		// 	elseif($field['field_type'] == "email") $field['field_type'] = "Line";
+			if($field['field_type'] == "Expression") continue;
 
-		// 	$field_name = $field->dbColumnName();
+			$field_name = $field->dbColumnName();
 			
-		// 	if($field['field_type'] == "Upload"){
-		// 		$f = $this->addField('xepan\filestore\Field_File',$field_name,$field['name']);
-		// 	}else{
-		// 		$f = $this->addField($field['field_type'],$field_name,$field['name']);
-		// 	}
-		// 	$f->setFieldHint($field['hint']);
-
-		// 	if(in_array($field['field_type'], ['DropDown','radio']) && $values = $field['default_value']){
-		// 		$t = explode(",", $values);
-		// 		$f->setValueList(array_combine($t, $t));
-		// 	}
-
-		// 	if($field['is_mandatory']){
-		// 		$f->validate('required');
-		// 	}
+			if($this->hasElement($field_name)){
+				$f = $this->getElement($field_name);
+				$f->setFieldHint($field['hint']);
+				if($field['is_mandatory']){
+					$f->validate('required');
+				}
+			}
+			// if($field['field_type'] == "Upload"){
+			// 	$f = $this->addField('xepan\filestore\Field_File',$field_name,$field['name']);
+			// }else{
+			// 	$f = $this->addField($field['field_type'],$field_name,$field['name']);
+			// }
+			// if(in_array($field['field_type'], ['DropDown','radio']) && $values = $field['default_value']){
+			// 	$t = explode(",", $values);
+			// 	$f->setValueList(array_combine($t, $t));
+			// }
 
 		// 	$f->set($this->list_data_model[$field_name]);
-		// }
+		}
 		// print_r($fields_in_layout);
 
 		$this->addSubmit($this->options['save_button_caption'])->addClass($this->options['save_button_class']);
