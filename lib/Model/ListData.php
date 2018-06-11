@@ -490,4 +490,26 @@ class Model_ListData extends \xepan\base\Model_Table{
 			return $list_data_model;
 
 	}
+
+	function applyListDataSetCondition($list_data_set_id){
+		$conditions = $this->add('xepan\listing\Model_ListDataSetCondition')
+			->addCondition('list_data_set_id',$list_data_set_id);
+
+		foreach ($conditions as $condition) {
+			$field_db_name = $condition->ref('filter_effected_field_id')->dbColumnName();
+
+			$value = $condition['value'];
+			if($condition['operator'] == "in"){
+				$value = explode(",", $value);
+			}
+
+			$operator = $condition['operator'];
+			if($condition['operator'] == "contains"){
+				$value = "%$value%";
+				$operator = "like";
+			}
+			
+			$this->addCondition($field_db_name,$operator,$value);
+		}
+	}
 }

@@ -9,6 +9,8 @@ class Tool_ManageListData extends \xepan\cms\View_Tool{
 		'save_button_caption'=>'Save',
 		'save_button_class'=>'btn btn-primary',
 		'list_data_record_id'=>null,
+		'show_data_set_record_only'=>false,
+		'list_data_set_id'=>null,
 	];
 	
 	function init(){
