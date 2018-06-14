@@ -19,6 +19,8 @@ class page_listdatadownload extends \Page {
 		$all_record = $this->app->stickyGET('all_record');
 		// apply data set condtion to all record
 		$data_set_id = $this->app->stickyGET('data_set_id');
+		// categories
+		$categories = $this->app->stickyGET('categories');
 		
 
 		$related_list_data_print_layout = null;
@@ -58,6 +60,15 @@ class page_listdatadownload extends \Page {
 				
 				$data_model->addCondition($field_db_name,$operator,$value);
 			}
+		}
+
+		// categories
+		if($categories AND $cat_array = explode(",",$categories) AND ($cat_array[0] != null or $cat_array[0] != 0)){
+			$cat_array = array_combine($cat_array, $cat_array);
+			$item_join = $data_model->Join('listing_category_list_data_association.list_data_id');
+			$item_join->addField('list_category_id');
+			$item_join->addField('category_assos_list_data_id','list_data_id');
+			$data_model->addCondition('list_category_id',$cat_array);
 		}
 
 		if(!$all_record AND $list_data_id){

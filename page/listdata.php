@@ -57,9 +57,18 @@ class page_listdata extends \xepan\base\Page {
 			$data_set_field->setEmptyText('Please Select Data Set Condition');
 			$form->addField('checkbox','include_related_contact');
 
+			$cat_model = $this->add('xepan\listing\Model_Category')
+						->addCondition('status','Active');
+			$cat_field = $form->addField('DropDown','categories')
+						->addClass('multiselect-full-width')
+						->setAttr(['multiple'=>'multiple']);
+			$cat_field->setModel($cat_model);
+
+
 			$form->addSubmit('Go');
 
 			if($form->isSubmitted()){
+				
 				$this->app->js(true)->univ()
 					->newWindow(
 					$this->app->url('xepan_listing_listdatadownload',
@@ -68,7 +77,8 @@ class page_listdata extends \xepan\base\Page {
 										'related_contact'=>$form['include_related_contact'],
 										'action'=>'html',
 										'all_record'=>1,
-										'data_set_id'=>$form['data_set_condition']
+										'data_set_id'=>$form['data_set_condition'],
+										'categories'=>$form['categories']
 									]),
 					'PrintAllListData'
 				)->execute();
