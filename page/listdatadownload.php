@@ -7,6 +7,9 @@ class page_listdatadownload extends \Page {
 	function init(){
 		parent::init();
 
+		ini_set("memory_limit", "-1");
+   		set_time_limit(0);
+
 		$listing_id = $this->app->stickyGET('listing_id');
 		$list_data_id = $this->app->stickyGET('list_data_id');
 		// for print document
