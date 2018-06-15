@@ -71,7 +71,7 @@ class page_listdatadownload extends \Page {
 			$data_model->addCondition('list_category_id',$cat_array);
 
 			$q = $data_model->dsql();
-			$group_element = $q->expr('[0]',[$data_model->getElement('list_category_id')]);
+			$group_element = $q->expr('[0]',[$data_model->getElement('category_assos_list_data_id')]);
 			$data_model->_dsql()->group($group_element);
 		}
 
