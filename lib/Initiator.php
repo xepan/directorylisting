@@ -26,11 +26,21 @@ class Initiator extends \Controller_Addon {
 
 	function populateApplicationMenus(){
 		if(!$this->app->getConfig('hidden_xepan_listing',false)){
-			$this->app->listing_menu = $this->app->top_menu->addMenu('Listing');
+			// $this->app->listing_menu = $this->app->top_menu->addMenu('Listing');
 			// $this->app->listing_menu->addItem(['Contact','icon'=>' fa fa-sitemap'],'xepan_listing_contact');
-			$this->app->listing_menu->addItem(['Listing List','icon'=>' fa fa-file-text-o'],'xepan_listing_list');
+			// $this->app->listing_menu->addItem(['Listing List','icon'=>' fa fa-file-text-o'],'xepan_listing_list');
 			// $this->app->listing_menu->addItem(['Listing Fields','icon'=>' fa fa-file-text-o'],'xepan_listing_field');
 		}
+	}
+
+	function getTopApplicationMenu(){
+		return ['Listing'=>[
+						[	'name'=>'Listing List',
+							'icon'=>'fa fa-file-text-o',
+							'url'=>'xepan_listing_list'
+						]
+					]
+			];
 	}
 
 	function setup_pre_frontend(){
