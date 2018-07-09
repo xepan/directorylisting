@@ -247,9 +247,9 @@ class Model_ListData extends \xepan\base\Model_Table{
 			$phone_array = array_merge($phone_array,explode(",", $act['sms_send_to_custom_phone_numbers']));
 
 			// filter empty value to 
-			$email_array = array_filter($email_array, function($value) { return $value !== ''; });
-			$phone_array = array_filter($phone_array, function($value) { return $value !== ''; });
-			
+			$email_array = array_unique(array_filter($email_array, function($value) { return $value !== ''; }));
+			$phone_array = array_unique(array_filter($phone_array, function($value) { return $value !== ''; }));
+						
 			$data_array = [];
 			
 			if($creator->loaded()){
@@ -257,7 +257,7 @@ class Model_ListData extends \xepan\base\Model_Table{
 					$data_array['creator_'.$f]=$creator[$f];
 				}
 			}
-			
+					
 			$data_array = array_merge($data_array,$this->data);
 			if(count($email_array)){
 
