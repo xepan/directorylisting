@@ -5,7 +5,7 @@ namespace xepan\listing;
 class page_listdata extends \xepan\base\Page {
 	public $title='List Data';
 
-	public $list_id; // list id 
+	public $list_id; // list id
 	public $list_data_model; // list data model
 
 	function init(){
@@ -88,7 +88,7 @@ class page_listdata extends \xepan\base\Page {
 
 
 		// apply filter data
-		$filter_form = $crud->grid->addQuickSearch(['radius_username','plan']);
+		$filter_form = $crud->grid->addQuickSearch(['status']);
 		$filter_form->getElement('q')->setAttr('style','display:none;');
 
 		$filter_form->addClass('atk-form atk-form-stacked atk-form-compact atk-move-right');
@@ -104,6 +104,11 @@ class page_listdata extends \xepan\base\Page {
 		$condition_filter_field->setModel($data_set_model);
 		$condition_filter_field->setEmptyText('Select Filter');
 
+		
+		$status_field = $filter_form->addField('DropDown','status')->setEmptyText('All Status');
+		$status_field->setValueList(array_combine($this->list_data_model->status,$this->list_data_model->status));
+
+		
 		$filter_form->addHook('applyFilter',function($f,$m){
 			if($f['data_set_condition']){
 				$conditions = $this->add('xepan\listing\Model_ListDataSetCondition')
@@ -126,9 +131,14 @@ class page_listdata extends \xepan\base\Page {
 					$m->addCondition($field_db_name,$operator,$value);
 				}
 			}
+
+			if($f['status']){
+				$m->addCondition('status',$f['status']);
+			}
 		});
 
 		$condition_filter_field->js('change',$filter_form->js()->submit());
+		$status_field->js('change',$filter_form->js()->submit());
 	}
 }
 
