@@ -105,15 +105,17 @@ class page_listdata extends \xepan\base\Page {
 		$data_set_model = $this->add('xepan\listing\Model_ListDataSet');
 		$data_set_model->addCondition('list_id',$this->list_id);
 
-		$condition_filter_field = $filter_form->addField('DropDown','data_set_condition');
+		$condition_filter_field = $filter_form->addField('xepan\base\DropDown','data_set_condition');
 		$condition_filter_field->setModel($data_set_model);
 		$condition_filter_field->setEmptyText('Select Filter');
 
 		
-		$status_field = $filter_form->addField('DropDown','status')->setEmptyText('All Status');
+		$status_field = $filter_form->addField('xepan\base\DropDown','status')->setEmptyText('All Status');
 		$status_field->setValueList(array_combine($this->list_data_model->status,$this->list_data_model->status));
 
-		
+		$cat_field = $filter_form->addField('xepan\base\DropDown','category')->setEmptyText('All Category');
+		$cat_field->setModel($m->listModel()->ref('xepan\listing\Category'));
+				
 		$filter_form->addHook('applyFilter',function($f,$m){
 			if($f['data_set_condition']){
 				$conditions = $this->add('xepan\listing\Model_ListDataSetCondition')
@@ -140,10 +142,18 @@ class page_listdata extends \xepan\base\Page {
 			if($f['status']){
 				$m->addCondition('status',$f['status']);
 			}
+
+			if($category_id = $f['category']){
+				$lead_assoc = $m->join('listing_category_list_data_association.list_data_id','id');
+				$lead_assoc->addField('list_category_id','list_category_id');
+				$m->addCondition('list_category_id',$category_id);
+				$m->_dsql()->group('list_data_id');
+			}
 		});
 
 		$condition_filter_field->js('change',$filter_form->js()->submit());
 		$status_field->js('change',$filter_form->js()->submit());
+		$cat_field->js('change',$filter_form->js()->submit());
 	}
 }
 
