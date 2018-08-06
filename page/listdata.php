@@ -13,10 +13,14 @@ class page_listdata extends \xepan\base\Page {
 		
 		$this->list_id = $list_id =  $this->app->stickyGET('listid');
 		$this->list_data_model = $m = $this->add('xepan\listing\Model_ListData',['listing'=>$list_id]);
+		$m->addExpression('catagories')->set(function($m,$q){
+			$x = $m->add('xepan\listing\Model_Association_ListDataCategory',['table_alias'=>'lead_cat_assos']);
+			return $x->addCondition('list_data_id',$q->getField('id'))->_dsql()->del('fields')->field($q->expr('group_concat([0])',[$x->getElement('list_category')]));
+		});
 
 		$crud = $this->add('xepan\hr\CRUD',['grid_options'=>['fixed_header'=>false]]);
 		if($crud->isEditing()){
-			$f = $crud->form->addField('DropDown','categories');
+			$f = $crud->form->addField('xepan\base\DropDown','categories');
 			$f->setModel($m->listModel()->ref('xepan\listing\Category'));
 			$f->setAttr('multiple');
 			$crud->addHook('formSubmit',function($c,$cf){
@@ -38,7 +42,7 @@ class page_listdata extends \xepan\base\Page {
 			if($crud->grid->template)
 				$crud->grid->template->trySet('grid_table_class','table-responsive overflow-auto');
 		}
-
+		$crud->grid->removeAttachment();
 		// if($crud->grid->template)
 
 		$order = $crud->grid->addOrder();
