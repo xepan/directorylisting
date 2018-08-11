@@ -87,7 +87,7 @@ class page_listdatadownload extends \Page {
 		if($all_record){
 			$html = "";
 			foreach ($data_model as $data) {
-				$this->app->print_r($data->data);
+				// $this->app->print_r($data->data);
 				$html .= $data->generatePDF($pdf_action,$layout,$include_related_contact,$related_list_data_print_layout,$return_html_only=true);
 			}
 		}else{
