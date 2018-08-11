@@ -62,6 +62,11 @@ class page_listdatadownload extends \Page {
 			}
 		}
 
+		$data_model->addExpression('category_comma_seperated')->set(function($m,$q){
+			$x = $m->add('xepan\listing\Model_Association_ListDataCategory',['table_alias'=>'contacts_str']);
+			return $x->addCondition('list_data_id',$q->getField('id'))->_dsql()->del('fields')->field($q->expr('group_concat([0] SEPARATOR ", ")',[$x->getElement('list_category')]));
+		})->allowHTML(true);
+
 		// categories
 		if($categories AND $cat_array = explode(",",$categories) AND ($cat_array[0] != null or $cat_array[0] != 0)){
 			$cat_array = array_combine($cat_array, $cat_array);
@@ -82,6 +87,7 @@ class page_listdatadownload extends \Page {
 		if($all_record){
 			$html = "";
 			foreach ($data_model as $data) {
+				$this->app->print_r($data->data);
 				$html .= $data->generatePDF($pdf_action,$layout,$include_related_contact,$related_list_data_print_layout,$return_html_only=true);
 			}
 		}else{
