@@ -4,7 +4,21 @@ namespace xepan\listing;
 
 class Model_Contact extends \xepan\base\Model_Contact{
 	var $table_alias = "listingContact";
+	public $title_field = "name_with_user_name";
+	function init(){
+		parent::init();
 
+
+		$this->addExpression('name_with_user_name')->set(function($m,$q){
+			return $q->expr('CONCAT(IFNULL([0],"")," ",IFNULL([1],"")," :: ",IFNULL([2],""))',
+				[
+					$m->getElement('first_name'),
+					$m->getElement('last_name'),
+					$m->getElement('user')
+				]);
+		});
+
+	}
 
 	function createContact($app,$contact_detail=[],$user){
 		$this->addCondition('user_id',$user['id']);
