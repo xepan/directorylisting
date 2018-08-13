@@ -13,7 +13,7 @@ class page_listdatadownload extends \Page {
 		$listing_id = $this->app->stickyGET('listing_id');
 		$list_data_id = $this->app->stickyGET('list_data_id');
 		// for print document
-		$include_related_contact = $this->app->stickyGET('related_contact')?:0;
+		$include_related_contact = $this->app->stickyGET('related_contact')?:1;
 		$action = $this->app->stickyGET('action');
 		// for all data layout 
 		$all_record = $this->app->stickyGET('all_record');
@@ -87,7 +87,6 @@ class page_listdatadownload extends \Page {
 		if($all_record){
 			$html = "";
 			foreach ($data_model as $data) {
-				// $this->app->print_r($data->data);
 				$html .= $data->generatePDF($pdf_action,$layout,$include_related_contact,$related_list_data_print_layout,$return_html_only=true);
 			}
 		}else{
