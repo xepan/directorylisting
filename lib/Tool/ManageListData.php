@@ -11,7 +11,6 @@ class Tool_ManageListData extends \xepan\cms\View_Tool{
 		'list_data_record_id'=>null,
 		'show_data_set_record_only'=>false,
 		'list_data_set_id'=>null,
-		'show_first_record'=>false,
 		'list_data_contact_id'=>0,
 	];
 	
@@ -25,15 +24,6 @@ class Tool_ManageListData extends \xepan\cms\View_Tool{
 
 		if($this->app->stickyGET('list_data_record_id')){
 			$this->options['list_data_record_id']=$_GET['list_data_record_id'];
-		}
-
-		if($this->options['show_first_record']){
-			$contact = $this->add('xepan\base\Model_Contact');
-			if(!$contact->loadLoggedIn()){
-				$this->add("View_Error")->set('Record is not found');
-				return;
-			}
-			$this->options['list_data_contact_id'] = $contact->id;
 		}
 
 		// try{
