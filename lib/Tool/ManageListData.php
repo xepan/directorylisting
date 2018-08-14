@@ -11,7 +11,8 @@ class Tool_ManageListData extends \xepan\cms\View_Tool{
 		'list_data_record_id'=>null,
 		'show_data_set_record_only'=>false,
 		'list_data_set_id'=>null,
-		'show_first_record'=>false
+		'show_first_record'=>false,
+		'list_data_contact_id'=>0,
 	];
 	
 	function init(){
@@ -32,7 +33,7 @@ class Tool_ManageListData extends \xepan\cms\View_Tool{
 				$this->add("View_Error")->set('Record is not found');
 				return;
 			}
-			$this->options['list_data_record_id'] = $contact->id;
+			$this->options['list_data_contact_id'] = $contact->id;
 		}
 
 		// try{
