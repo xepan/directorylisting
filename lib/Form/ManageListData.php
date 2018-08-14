@@ -18,8 +18,9 @@ class Form_ManageListData extends \Form {
 
 		if($this->options['list_data_contact_id']){
 			$this->list_data_model->setOrder('id','asc')->tryLoadAny('contact_id',$this->options['list_data_contact_id']);
+		}
 
-		}elseif($this->options['list_data_record_id']) $this->list_data_model->load($this->options['list_data_record_id']);
+		if($this->options['list_data_record_id']) $this->list_data_model->load($this->options['list_data_record_id']);
 		
 		if($this->options['list_data_set_id']){
 			$this->list_data_model->applyListDataSetCondition($this->options['list_data_set_id']);
