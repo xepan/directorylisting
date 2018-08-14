@@ -31,6 +31,7 @@ class Model_Fields extends \xepan\base\Model_Table{
 								'radio'=>'Radio',
 								'checkbox'=>'Checkbox',
 								'DropDown'=>'DropDown',
+								'Multiselect'=>'Multiselect',
 								'DatePicker'=>"DatePicker",
 								'Upload'=>"Upload",
 								'TimePicker'=>"TimePicker",
@@ -166,6 +167,9 @@ class Model_Fields extends \xepan\base\Model_Table{
 				break;
 			case 'upload':
 				$type = "int";
+				break;
+			case 'Multiselect':
+				$type = "text";
 				break;
 			default:
 				$type = "varchar(255)";

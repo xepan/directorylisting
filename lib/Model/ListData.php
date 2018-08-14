@@ -59,12 +59,15 @@ class Model_ListData extends \xepan\base\Model_Table{
 			}else{
 				$f = $this->addField($field_db_column_name);
 				$f->type($field->modelFieldType());
+
+				if($field['field_type'] == "Multiselect")
+					$f->display(['form'=>'xepan\base\Multiselect']);
 			}
 
 			$f->caption($field['name']);
 			$f->hint($field['hint']);
 
-			if(in_array($field['field_type'], ['DropDown','radio']) && $values = $field['default_value']){
+			if(in_array($field['field_type'], ['DropDown','radio','Multiselect']) && $values = $field['default_value']){
 				$f->enum(explode(",", $values));
 			}
 

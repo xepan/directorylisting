@@ -58,6 +58,11 @@ class Form_ManageListData extends \Form {
 				if($field['is_mandatory']){
 					$f->validate('required');
 				}
+
+				if($field['field_type'] == "Multiselect"){
+					$f->set( explode(",",$this->list_data_model[$field_name]));
+				}
+
 			}
 			// if($field['field_type'] == "Upload"){
 			// 	$f = $this->addField('xepan\filestore\Field_File',$field_name,$field['name']);
