@@ -39,7 +39,7 @@ class Model_Fields extends \xepan\base\Model_Table{
 								"Expression"=>'Expression'
 							)
 						);
-		$this->addField('default_value');
+		$this->addField('default_value')->type("text");
 		$this->addField('placeholder');
 		$this->addField('hint');
 
