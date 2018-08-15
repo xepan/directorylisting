@@ -9,6 +9,7 @@ class page_list extends \xepan\base\Page {
 		parent::init();
 
 		$listing_list_model = $this->add('xepan\listing\Model_List');
+
 		// $listing_list_model->add('xepan\listing\Controller_SideBarStatusFilter');
 
 		$crud = $this->add('xepan\hr\CRUD');
@@ -23,9 +24,16 @@ class page_list extends \xepan\base\Page {
 
             ]);
 
-		$crud->setModel($listing_list_model,['name','list_data_status','status']);
+		$crud->setModel($listing_list_model,['name','list_data_status','data_count','status']);
 		$crud->grid->addQuickSearch(['name']);
 		$crud->grid->removeAttachment();
+		$crud->grid->addColumn('data_count');
+
+		$crud->grid->addHook('formatRow',function($g){
+			$ld = $this->add('xepan\listing\Model_ListData',['listing'=>$g->model->id]);
+			$g->current_row['data_count'] = $ld->count()->getOne();
+		});
+
 		// $crud->grid->addPaginator(10);
 
 		
