@@ -65,7 +65,7 @@ class Model_List extends \xepan\base\Model_Table{
 
 		$table_name = $this->getTableName();
 		// creating new table
-		$query = 'CREATE TABLE `'.$table_name.'` ( `id` int(11) NOT NULL AUTO_INCREMENT, `created_at` datetime, `updated_at` datetime, `created_by_id` int,`status` varchar(255) ,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;';
+		$query = 'CREATE TABLE `'.$table_name.'` ( `id` int(11) NOT NULL AUTO_INCREMENT, `created_at` datetime, `updated_at` datetime, `last_viewed_at` datetime ,`created_by_id` int,`status` varchar(255) ,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;';
 		if($this->loaded() && $this->isDirty('name')){
 			$old_model = $this->add('xepan\listing\Model_List')->load($this->id);
 			$old_table_name = 'xepan_listing_'.$this->app->normalizeName(strtolower($old_model['name']));
