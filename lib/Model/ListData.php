@@ -21,6 +21,7 @@ class Model_ListData extends \xepan\base\Model_Table{
 			'created_by_id'=>'created_by_id',
 			'created_by'=>'created_by',
 			'created_at'=>'created_at',
+			'created_date'=>'created_date',
 			'updated_at'=>'updated_at',
 			'status'=>'status'
 		];
@@ -123,7 +124,11 @@ class Model_ListData extends \xepan\base\Model_Table{
 		// setting up status dropdown to status field
 		$ts = explode(",",$this->listing['list_data_status']);
 		$this->getElement('status')->enum(array_combine($ts,$ts))->defaultValue($ts[0]);
-		
+
+		$this->addExpression('created_date',function($m,$q){
+			return $q->expr('date([0])',[$m->getElement('created_at')]);
+		});
+
 		$this->addHook('beforeSave',[$this,"executeStatusActivity"]);
 	}
 
