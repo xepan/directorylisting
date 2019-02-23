@@ -45,7 +45,8 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 			return;
 		}
 
-
+		$this->listdata_model['last_viewed_at'] = $this->app->now;
+		$this->listdata_model->save()->reload();
 		// $this->app->print_r($this->listdata_model->data);
 		$this->setModelValue($this->listdata_model);
 		// $this->setModel($this->listdata_model);
