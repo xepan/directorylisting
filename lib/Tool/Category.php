@@ -5,7 +5,11 @@ namespace xepan\listing;
 class Tool_Category extends \xepan\cms\View_Tool{
 	public $options = [
 					'template'=>'grid',
-					'show_image'=>true
+					'show_image'=>true,
+					'sorting_order'=>'desc',
+					'submenu_class'=>'submenu',
+					'submenu_icon_class'=>'fa fa-chevron-down',
+					'detail_page'=>''
 				];
 	
 	function init(){

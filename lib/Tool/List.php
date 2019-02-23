@@ -33,7 +33,8 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'show_detail_if_permitted'=>false,
 				'show_paginator'=>true,
 				'data_row_limit'=>null,
-				'show_list_data_for_created_by_id_of_list'=>false // for this option must pass created_by_id in this param " listcreatedby "
+				'display_slider'=>true,
+				'show_list_data_for_created_by_id_of_list'=>false, // for this option must pass created_by_id in this param " listcreatedby "
 			];
 	
 	function init(){
@@ -415,5 +416,14 @@ class Tool_List extends \xepan\cms\View_Tool{
 		}
 
 		return $validate;
+	}
+
+	function recursiveRender(){
+		if($this->options['display_slider']){
+			// $this->js()->_css('owlslider/assets/owl.carousel');
+			// $this->js()->_css('owlslider/assets/owl.theme.default');
+			$this->js()->_load('owlslider/owl.carousel.min');
+		}
+		parent::recursiveRender();
 	}
 }

@@ -13,7 +13,7 @@ class View_CategoryLister extends \CompleteLister{
 				->addCondition('is_website_display',true)
 				->addCondition([['parent_category_id',0],['parent_category_id',null]]);
 
-		$model->setOrder('display_sequence','desc');
+		$model->setOrder('display_sequence',$this->options['sorting_order']?:'desc');
 		$this->setModel($model);
 
 		$this->add('xepan\cms\Controller_Tool_Optionhelper',['options'=>$this->options,'model'=>$model]);
@@ -22,24 +22,24 @@ class View_CategoryLister extends \CompleteLister{
 	function formatRow(){
 
 	// 	//calculating url
-	// 	if($this->model['custom_link']){
-	// 		// if custom link contains http or https then redirect to that website
-	// 		$has_https = strpos($this->model['custom_link'], "https");
-	// 		$has_http = strpos($this->model['custom_link'], "http");
-	// 		if($has_http === false or $has_https === false )
-	// 			$url = $this->app->url($this->model['custom_link'],['xsnb_category_id'=>$this->model->id]);
-	// 		else
-	// 			$url = $this->model['custom_link'];
-	// 		$this->current_row_html['url'] = $url;
+		if($this->model['custom_link']){
+			// if custom link contains http or https then redirect to that website
+			$has_https = strpos($this->model['custom_link'], "https");
+			$has_http = strpos($this->model['custom_link'], "http");
+			if($has_http === false or $has_https === false )
+				$url = $this->app->url($this->model['custom_link'],['xlcategory_id'=>$this->model->id]);
+			else
+				$url = $this->model['custom_link'];
+			$this->current_row_html['url'] = $url;
 
-	// 	}elseif($this->app->enable_sef){
-	// 		$url = $this->app->url($this->options['url_page'].'/'.$this->model['sef_url']);
-	// 		$url->arguments = [];
-	// 		$this->current_row_html['url'] = $url;
-	// 	}else{
-	// 		$url = $this->app->url($this->options['url_page'],['xsnb_category_id'=>$this->model->id]);
-	// 		$this->current_row_html['url'] = $url;
-	// 	}
+		}elseif($this->app->enable_sef){
+			$url = $this->app->url($this->options['detail_page'].'/'.$this->model['slug_url']);
+			$url->arguments = [];
+			$this->current_row_html['url'] = $url;
+		}else{
+			$url = $this->app->url($this->options['detail_page'],['xlcategory_id'=>$this->model->id]);
+			$this->current_row_html['url'] = $url;
+		}
 
 	// 	if($this->options['include_sub_category'] && $this->options['show_only_parent']){
 			$sub_cat = $this->add('xepan\listing\Model_Category',['name'=>'model_child_'.$this->model->id]);
@@ -48,11 +48,18 @@ class View_CategoryLister extends \CompleteLister{
 			$sub_cat->addCondition('is_website_display',true);
 			$sub_cat->setOrder('display_sequence','desc');
 			if($sub_cat->count()->getOne() > 0){
-				$sub_c = $this->add('xepan\listing\View_CategoryLister',['options'=>$this->options],'nested_category',['view\listing\category\/'.$this->options['template'],'category_list']);
+				$sub_c = $this->add('xepan\listing\View_CategoryLister',['options'=>$this->options],'nested_category',['view\tool\listing\category\/'.$this->options['template'],'category_list']);
 				$sub_c->setModel($sub_cat);
 				$this->current_row_html['nested_category']= $sub_c->getHTML();
+				$this->current_row_html['submenu_class']= $this->options['submenu_class'];
+
+				if($this->options['submenu_icon_class'])
+					$this->current_row_html['submenu_icon'] = '<i class="'.$this->options['submenu_icon_class'].'"></i>';
 			}else{
 				$this->current_row_html['nested_category'] = "";
+				$this->current_row_html['submenu_class']= " ";
+				if($this->options['submenu_icon_class'])
+					$this->current_row_html['submenu_icon']= " ";
 			}
 	// 	}
 		parent::formatRow();

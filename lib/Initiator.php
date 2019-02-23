@@ -9,7 +9,7 @@ class Initiator extends \Controller_Addon {
 	function setup_admin(){
 
 		$this->routePages('xepan_listing');
-		$this->addLocation(array('template'=>'templates','js'=>'templates/js'))
+		$this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
 			->setBaseURL('../vendor/xepan/listing/');
 
 		if($this->app->inConfigurationMode)
@@ -62,7 +62,7 @@ class Initiator extends \Controller_Addon {
 
 		$contact = $this->add('xepan\listing\Model_Contact');
 		$this->app->addHook('userCreated',[$contact,'createContact']);
-
+		
 		return $this;
 	}
 
