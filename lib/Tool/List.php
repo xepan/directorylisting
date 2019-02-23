@@ -156,14 +156,6 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$listdata_model->setOrder($field,$order);
 		}
 
-		// add paginator
-		if($this->options['show_paginator'] AND $limit = $this->options['data_row_limit']){
-			$this->lister->grid->addPaginator($limit);
-		}
-		if(!$this->options['show_paginator'] AND $limit = $this->options['data_row_limit']){
-			$listdata_model->setLimit($limit);
-		}
-
 		if($crud->isEditing('add') AND $this->options['default_data_add_status']){
 			$listdata_model->addCondition('status',$this->options['default_data_add_status']);
 		}
@@ -175,6 +167,14 @@ class Tool_List extends \xepan\cms\View_Tool{
 
 
 		$crud->setModel($listdata_model,isset($form_fields)?$form_fields:array_keys($fields),array_keys($fields));
+
+		// add paginator
+		if($this->options['show_paginator'] AND $limit = $this->options['data_row_limit']){
+			$this->lister->grid->addPaginator($limit);
+		}
+		if(!$this->options['show_paginator'] AND $limit = $this->options['data_row_limit']){
+			$listdata_model->setLimit($limit);
+		}
 
 		if($crud->isEditing('edit') && $this->options['listing_add_allow_category_selection']){
 			$crud->form->getElement('categories')->set($crud->form->model->getAssociatedCategories());
