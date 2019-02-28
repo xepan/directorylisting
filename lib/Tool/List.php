@@ -218,7 +218,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 			}	
 		}
 
-		$crud->add('xepan\cms\Controller_Tool_Optionhelper',['options'=>$this->options,'model'=>$listdata_model]);
+		$crud->grid->add('xepan\cms\Controller_Tool_Optionhelper',['options'=>$this->options,'model'=>$listdata_model]);
 	}
 
 	function getTemplate(){

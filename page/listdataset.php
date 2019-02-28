@@ -14,6 +14,8 @@ class page_listdataset extends \xepan\base\Page {
 		
 		$crud = $this->add('xepan\hr\CRUD');
 		$crud->setModel($m);
+
+		$crud->grid->removeAttachment();
 	}
 }
 

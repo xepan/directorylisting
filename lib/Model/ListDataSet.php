@@ -72,6 +72,7 @@ class Model_ListDataSet extends \xepan\base\Model_Table{
 	        $form->getElement('filter_effected_field_id')->getModel()->addCondition('list_id',$this['list_id']);
         }
 		$crud->grid->addPaginator(25);
+		$crud->grid->removeAttachment();
 
 	}
 }

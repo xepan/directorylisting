@@ -6,7 +6,7 @@ class Model_List extends \xepan\base\Model_Table{
 	public $table='list';
 	public $status = ['Published','UnPublished'];
 	public $actions = [
-					'Active'=>['view','fields','data','filters','list_data_set','manage_layouts','manage_status_activity','plan_management','plan_associate_with_user','category','configuration','edit','delete','deactivate'],
+					'Active'=>['view','fields','data','filters','list_data_set','manage_layouts','manage_status_activity','plan_management','plan_associate_with_user','category','list_data_custom_form','configuration','edit','delete','deactivate'],
 					'Inactive'=>['view','fields','data','filters','list_data_set','manage_status_activity','category','plan_management','edit','delete','activate']
 				];
 
@@ -218,4 +218,28 @@ class Model_List extends \xepan\base\Model_Table{
 		}
 
 	}
+
+	function page_list_data_custom_form($page){
+		$model = $this->add('xepan\listing\Model_ListDataCustomForm')
+			->addCondition('list_id',$this->id);
+
+		$crud = $page->add('xepan\hr\CRUD');
+		if($crud->isEditing() AND $form = $crud->form){
+			$form->add('xepan\base\Controller_FLC')
+				->showLables(true)
+				->makePanelsCoppalsible(true)
+				->layout([
+						'name'=>'List Detail Page Enquiry Form Configuration used at website~c1~12',
+						'custom_form_id~Custom Form'=>'c2~4',
+						'list_data_set_id~List Data Set'=>'c3~4',
+						'status'=>'c4~4',
+						'FormButtons~&nbsp;'=>'c11~12',
+					]);
+		}	
+
+		$crud->setModel($model,['name','custom_form_id','list_data_set_id','status'],['name','custom_form','list_data_set','status']);
+		$crud->grid->removeColumn('status');		
+		$crud->grid->removeAttachment();
+	}
+
 }	

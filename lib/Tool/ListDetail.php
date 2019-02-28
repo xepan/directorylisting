@@ -44,6 +44,9 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 			$this->add('View_Warning')->addClass('alert alert-warning')->set("You are not permitted to view this detail");
 			return;
 		}
+		if(!$this->options['custom_template']){
+			$this->add('View_Warning')->addClass('alert alert-warning')->set('Please add your custom template');
+		}
 
 		$this->listdata_model['last_viewed_at'] = $this->app->now;
 		$this->listdata_model->save()->reload();
