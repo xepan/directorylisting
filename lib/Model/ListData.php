@@ -521,4 +521,37 @@ class Model_ListData extends \xepan\base\Model_Table{
 			$this->addCondition($field_db_name,$operator,$value);
 		}
 	}
+
+	function getCustomForm(){
+		// check condition here and implement data condition here
+		
+		$condition_model = $this->add('xepan\listing\Model_ListDataCustomForm');
+		$condition_model->addCondition('list_id',$this->listing->id);
+		$condition_model->addCondition('status','Active');
+
+		$form_id = 0;
+		foreach ($condition_model as $condition) {
+			if($form_id) break;
+
+			if($condition['list_data_set_id']){
+				$listdata_model = $this->add('xepan\listing\Model_ListData',['listing'=>$this->listing->id]);
+				$listdata_model->addCondition('id',$this->id);
+				if($listdata_model->applyListDataSet($condition['list_data_set_id'],$listdata_model)){
+					$form_id = $condition['custom_form_id'];
+				} 
+			}
+		}
+
+		if(!$form_id){
+			$condition_model = $this->add('xepan\listing\Model_ListDataCustomForm');
+			$condition_model->addCondition('list_id',$this->listing->id);
+			$condition_model->addCondition('status','Active');
+			$condition_model->addCondition([['list_data_set_id',0],['list_data_set_id',null]]);
+			$condition_model->tryLoadAny();
+			if($condition_model->loaded()) $form_id = $condition_model['custom_form_id'];
+		}
+
+		return $form_id;
+	}
+
 }

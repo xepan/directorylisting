@@ -13,7 +13,8 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 					'allow_rating'=>true,
 					'show_social_share'=>false,
 					'custom_template'=>null,
-					'show_detail_if_permitted'=>false
+					'show_detail_if_permitted'=>false,
+					'show_custom_form'=>false
 				];
 	
 	function init(){
@@ -53,7 +54,25 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 		// $this->app->print_r($this->listdata_model->data);
 		$this->setModelValue($this->listdata_model);
 		// $this->setModel($this->listdata_model);
+
+		if($this->options['show_custom_form']) $this->addCustomForm();
 	}
+
+	function addCustomForm(){
+		$form_id = $this->listdata_model->getCustomForm();		
+		$options = [
+			'customformid'=>$form_id,
+			'custom_form_success_url'=>null,
+			'implement_form_layout'=>false
+		];
+		$related_data = ['related_type'=>$this->listing_model->getTableName(),'related_id'=>$this->listdata_model->id];
+			
+		if($this->template->hasTag('customform')){
+			$this->add('xepan\cms\Tool_CustomForm',['options'=>$options,'related_data'=>$related_data],"customform");
+		}else{
+			$this->add('xepan\cms\Tool_CustomForm',['options'=>$options,'related_data'=>$related_data]);
+		}
+	}	
 
 	function setModelValue($model){
 		// parent::setModel($model);
