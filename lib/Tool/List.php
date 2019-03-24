@@ -334,6 +334,10 @@ class Tool_List extends \xepan\cms\View_Tool{
 	function requiredOptionMessage(){
 		if(!$this->options['listing_id']) return "please select listing ...";
 		
+		if(!$this->options['list_of_categories'] && $_GET['xlcategory_id']){
+			$this->options['list_of_categories'] = $_GET['xlcategory_id'];
+		}
+
 		return false;		
 	}
 
