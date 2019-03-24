@@ -17,6 +17,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'show_premium_fields'=>'onPremiumUser', //0,always,onLogin, onPremiumUser
 				'show_mark_favourite_button'=>true, // true, false
 				'show_list_data_created_by_login_user'=>false,
+				'show_category_breadcum'=>true,
 				'status_to_show'=>null, //comma seperated multiple values
 				'default_data_add_status'=>null,
 				'is_filter_affected'=>true, // true, false
@@ -46,6 +47,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 		}
 
 		$this->js('reload')->reload();
+		$this->app->stickyGET('xlcategory_id');
 
 		if($message = $this->requiredOptionMessage()){
 			$this->add('View_Warning')->addClass('alert alert-warning')->set($message);
@@ -126,6 +128,11 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$this->listdata_model->addCondition('list_category_id',explode(",", $this->options['list_of_categories']));
 			$this->listdata_model->addCondition('list_id',$this->listing_model->id);
 		}
+
+		// if($_GET['xlcategory_id'] && $this->options['show_category_breadcum']){			
+			// $str = $this->getCategoryBreadCumbs($_GET['xlcategory_id']);
+			// $this->lister->add('View')->set($str);
+		// }
 
 		if($crud->isEditing() && $this->options['listing_add_allow_category_selection']){
 			$f = $crud->form->addField('DropDown','categories');
@@ -429,5 +436,18 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$this->js()->_load('owlslider/owl.carousel.min');
 		}
 		parent::recursiveRender();
+	}
+
+	function getCategoryBreadCumbs($cat_id){
+		$str = "";
+		$model = $this->add('xepan\listing\Model_Category');
+		$model->addCondition('status','Active')
+				->addCondition('is_website_display',true)
+				->addCondition('id',$cat_id);
+		$model->tryLoadAny();
+		if($model->loaded()){
+			$str .= $model['name'];
+		}
+
 	}
 }
