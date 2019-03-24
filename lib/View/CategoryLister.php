@@ -13,7 +13,7 @@ class View_CategoryLister extends \CompleteLister{
 				->addCondition('is_website_display',true)
 				->addCondition([['parent_category_id',0],['parent_category_id',null]]);
 
-		$model->setOrder('display_sequence',$this->options['sorting_order']?:'desc');
+		$model->setOrder('display_sequence',$this->options['sorting_order']?$this->options['sorting_order']:'desc');
 		$this->setModel($model);
 
 		$this->add('xepan\cms\Controller_Tool_Optionhelper',['options'=>$this->options,'model'=>$model]);
@@ -26,10 +26,11 @@ class View_CategoryLister extends \CompleteLister{
 			// if custom link contains http or https then redirect to that website
 			$has_https = strpos($this->model['custom_link'], "https");
 			$has_http = strpos($this->model['custom_link'], "http");
-			if($has_http === false or $has_https === false )
+			if($has_http === null or $has_https === null)
 				$url = $this->app->url($this->model['custom_link'],['xlcategory_id'=>$this->model->id]);
-			else
+			else{
 				$url = $this->model['custom_link'];
+			}
 			$this->current_row_html['url'] = $url;
 
 		}elseif($this->app->enable_sef){
@@ -46,7 +47,8 @@ class View_CategoryLister extends \CompleteLister{
 			$sub_cat->addCondition('parent_category_id',$this->model->id);
 			$sub_cat->addCondition('status',"Active");
 			$sub_cat->addCondition('is_website_display',true);
-			$sub_cat->setOrder('display_sequence','desc');
+			$sub_cat->setOrder('display_sequence',$this->options['sorting_order']?:'desc');
+
 			if($sub_cat->count()->getOne() > 0){
 				$sub_c = $this->add('xepan\listing\View_CategoryLister',['options'=>$this->options],'nested_category',['view\tool\listing\category\/'.$this->options['template'],'category_list']);
 				$sub_c->setModel($sub_cat);
