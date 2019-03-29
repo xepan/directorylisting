@@ -59,6 +59,7 @@ class Initiator extends \Controller_Addon {
 		$this->app->exportFrontEndTool('xepan\listing\Tool_ListDetail','Listing');
 		$this->app->exportFrontEndTool('xepan\listing\Tool_ListImage','Listing');
 		$this->app->exportFrontEndTool('xepan\listing\Tool_ManageListData','Listing');
+		$this->app->exportFrontEndTool('xepan\listing\Tool_DataCount','Listing');
 
 		$contact = $this->add('xepan\listing\Model_Contact');
 		$this->app->addHook('userCreated',[$contact,'createContact']);

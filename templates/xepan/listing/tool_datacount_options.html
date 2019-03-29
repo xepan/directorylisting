@@ -1,0 +1,99 @@
+<div id="{$_name}" style="display:none;" for-xepan-component="xepan/listing/Tool_DataCount" class="xepan-tool-options" xepan-component-name="List Data Count Tool">
+  <div class="xepan-cms-group-panel clearfix">
+    <div id="collapse-xepan-listing-list" class="xepan-cms-tools-bar-panel row-fluid collapse in">
+      <div style="padding-top:0px;padding-bottom:0px;" class="panel-body">
+        <div id="xepan-cms-groups-panel" class="xepan-cms-groups-panel collapse">
+        </div>
+        <div class="xepan-cms-group-panel clearfix">
+          <div data-toggle="collapse" data-target="#{$_name}_showhide" aria-expanded="false" class="panel panel-heading panel-primary collapsed">
+              <span>Hide/ Show</span>
+              <i class="fa fa-chevron-down pull-right"></i>
+          </div>
+        </div>
+        <div id="#{$_name}_showhide" class="xepan-cms-tools-bar-panel row-fluid collapse in">
+            <table class="table table-condensed table-hover xepan-cms-tool-table">
+              <!-- Listing List -->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-value">
+                  <div class="xepan-tool-option-title">Select Listing</div>
+                  <select id="xepan-listing-id" data-attr="listing_id" data-defaultvalue="0">
+                  </select>
+                </td>
+              </tr>
+
+              <!-- list data set-->
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-value">
+                  <div class="xepan-tool-option-title">Select List Data Set</div>
+                  <select id="xepan-listing-data-set-id" data-attr="list_data_set_id" data-defaultvalue="0">
+                  </select>
+                </td>
+              </tr>
+              <tr class="xepan-tool-option">
+                <td class="xepan-tool-option-value">
+                  <div class="xepan-tool-option-title">Show User Count</div>
+                  <select id="xepan-listing-user-count" data-attr="show_active_user_count" data-defaultvalue="0">
+                    <option value="1"> Yes </option>
+                    <option value="0"> No </option>
+                  </select>
+                </td>
+              </tr>
+
+            </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+      $('#{$_name} [data-attr]').on('change',function(){
+        $(current_selected_component).attr($(this).data('attr'),$(this).val());
+        // show or hide the toggle class
+        if($(this).data('toggleclass')){
+          var value = $(this).data('togglevalue').toString();
+          if($(this).val() === value){
+            $($(this).data('toggleclass')).show();
+          }else
+            $($(this).data('toggleclass')).hide();
+        }
+      });
+      
+      $('#{$_name} #xepan-listing-id').on('change',function(){
+        // list status
+        $.ajax({
+          url: 'index.php?page=xepan_listing_getrecord_listingdataset',
+          type: 'GET',
+          data: {'listing_id':$(this).val() },
+          success: function ( data ){
+            $('#{$_name} #xepan-listing-data-set-id').html(data);
+            $('#{$_name} #xepan-listing-data-set-id').val($(current_selected_component).attr('list_data_set_id'));
+          }
+        });
+
+      }); 
+
+      $('#{$_name}').on('show',function(event){
+
+        // all listing
+        $.ajax({
+          url: 'index.php?page=xepan_listing_getrecord_list',
+          type: 'GET',
+          data: { },
+          success: function ( data ){
+            $('#{$_name} #xepan-listing-id').html(data);
+            $('#{$_name} #xepan-listing-id').val($(current_selected_component).attr('listing_id')).trigger('change');
+          }
+        });
+
+        $('#{$_name} [data-attr]').each(function(index,value){
+          // setting up default value if no option selected
+          var default_value = $(this).attr('data-defaultvalue');
+          if($(current_selected_component).attr($(this).data('attr')))
+            default_value = $(current_selected_component).attr($(this).data('attr'));
+          
+          $(this).val(default_value);
+        });
+        
+      });
+    </script>
+</div>
