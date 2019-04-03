@@ -36,6 +36,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 				'data_row_limit'=>null,
 				'display_slider'=>true,
 				'show_list_data_for_created_by_id_of_list'=>false, // for this option must pass created_by_id in this param " listcreatedby "
+				'removewrapper'=>true
 			];
 	
 	function init(){
@@ -62,7 +63,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 		
 		$this->listdata_model = $listdata_model = $this->add('xepan\listing\Model_ListData',['listing'=>$this->options['listing_id']]);
 
-		$fields = $this->getDisplayFields();
+		$this->displayFields = $fields = $this->getDisplayFields();
 
 		if($template = $this->getCustomTemplatePath()){
 			$this->lister = $crud = $this->add('xepan\base\CRUD',['allow_add'=>$this->options['show_add_button'],'allow_edit'=>$this->options['show_edit_button'],'allow_del'=>$this->options['show_delete_button'],'grid_options'=>['add_sno'=>false]],null,['view/tool/listing/'.$this->options['custom_template']]);
@@ -152,11 +153,11 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$field = $this->options['display_sequence_based_on']?:'id';
 			if($this->options['display_sequence'] == 'fifo'){
 				$order = "asc";
-				$field = 'id';
+				// $field = 'id';
 			}
 			if($this->options['display_sequence'] == 'lifo'){
 				$order = "desc";
-				$field = 'id';
+				// $field = 'id';
 			}
 
 			// $listdata_model->setOrder('name','asc');
@@ -171,7 +172,6 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$is_array = $this->getValidationList();
 			$listdata_model->is($is_array);
 		}
-
 
 		$crud->setModel($listdata_model,isset($form_fields)?$form_fields:array_keys($fields),array_keys($fields));
 
@@ -279,6 +279,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 			}
 		}
 		$fields = array_merge($fields,$premium_fields);
+		
 		return $fields;
 	}
 
@@ -292,6 +293,20 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$this->lister->grid->template->tryDel('quick_search_wrapper');
 		}
 	}
+
+	function addToolCondition_row_removewrapper($value,$l){
+		$l->row_tag_array = [];
+		foreach ($this->displayFields as $key => $value) {
+			if(!isset($l->row_tag_array[$key]) && $l->template->hasTag($key.'_wrapper') ) $l->row_tag_array[$key] = $l->template->cloneRegion($key.'_wrapper')->render();
+
+			if($l->model[$key]){
+				$l->current_row_html[$key."_wrapper"] = $l->row_tag_array[$key];
+			}else{
+				$l->current_row_html[$key."_wrapper"] = "";
+			}
+		}
+	}
+
 
 	function addToolCondition_row_list_detail_page($value, $l){
 		// $config = $this->add('xepan\base\Model_ConfigJsonModel',
@@ -307,7 +322,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 		
 	}
 
-	function addToolCondition_show_data_list($value,$model){		
+	function addToolCondition_show_data_list($value,$model){
 		// switch ($value) {
 		// 	case 'new':
 		// 		$model->addCondition('is_new',true);
