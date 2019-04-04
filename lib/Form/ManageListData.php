@@ -19,11 +19,23 @@ class Form_ManageListData extends \Form {
 		if($this->options['list_data_set_id']){
 			$this->list_data_model->applyListDataSetCondition($this->options['list_data_set_id']);
 		}
+	
+		// apply condition for editing record 
+		if($this->options['list_data_record_id']){
+			$this->list_data_model->load($this->options['list_data_record_id']);
+		}
+
 
 		$contact = $this->add('xepan\base\Model_Contact');
 		$contact->loadLoggedIn();
 		if($contact->loaded()){
 			$this->list_data_model->addCondition('created_by_id',$contact->id);
+		}
+
+		// cross check contact id must equal to login user id
+		if($this->list_data_model['created_by_id'] != $contact->id){
+			$this->add('View')->set('You are not the authorize person to edit this record')->addClass('alert alert-warning');
+			return;
 		}
 
 		if($this->options['show_data_set_record_only']){
@@ -88,6 +100,9 @@ class Form_ManageListData extends \Form {
 			// 	$field_name = $field->dbColumnName();
 			// 	$this->list_data_model[$field_name] = $this[$field_name];
 			// }
+			if($this->options['data_save_status'])
+				$this->list_data_model['status'] = $this->options['data_save_status'];
+
 			$this->save();
 			// $this->list_data_model->saveAndUnload();
 			$this->js(null,$this->js()->univ()->successMessage('Saved Successfully'))->reload()->execute();

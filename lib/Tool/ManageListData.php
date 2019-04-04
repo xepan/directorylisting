@@ -12,6 +12,7 @@ class Tool_ManageListData extends \xepan\cms\View_Tool{
 		'show_data_set_record_only'=>false,
 		'list_data_set_id'=>null,
 		'list_data_contact_id'=>0,
+		'data_save_status'=>0
 	];
 	
 	function init(){
@@ -25,7 +26,7 @@ class Tool_ManageListData extends \xepan\cms\View_Tool{
 		if($this->app->stickyGET('list_data_record_id')){
 			$this->options['list_data_record_id']=$_GET['list_data_record_id'];
 		}
-
+		
 		// try{
 			$this->add('xepan\listing\Form_ManageListData',['options'=>$this->options]);
 		// }catch(\Exception $e){
