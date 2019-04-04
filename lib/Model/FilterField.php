@@ -33,7 +33,6 @@ class Model_FilterField extends \xepan\base\Model_Table{
 								'checkbox'=>'Checkbox',
 								'DropDown'=>'DropDown',
 								'DatePicker'=>"DatePicker",
-								// 'Upload'=>"Upload",
 								'TimePicker'=>"TimePicker",
 								"Captcha"=>'Captcha'
 							)
@@ -41,7 +40,7 @@ class Model_FilterField extends \xepan\base\Model_Table{
 		$this->addField('placeholder');
 		$this->addField('hint');
 		$this->addField('default_value')->type('text');
-		$this->addField('operator')->enum(['>','<','>=','<=','=','contains','in']);
+		$this->addField('operator')->enum(['>','<','>=','<=','=','contains','in','Between']);
 
 		$this->addField('status')->enum(['Active','Inactive'])->defaultValue('Active');
 		

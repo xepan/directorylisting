@@ -386,7 +386,18 @@ class Tool_List extends \xepan\cms\View_Tool{
 					$operator = "like";
 				}
 
-				$this->listdata_model->addCondition($condition['filter_effected_field'],$operator,$value);
+				if($condition['operator'] == "Between"){
+					$value_range = explode("-",$value);
+					$value1 = trim($value_range[0]);
+					$value2 = trim($value_range[1]);
+
+					$this->listdata_model->addCondition($condition['filter_effected_field'],'>=',$value1);
+					$this->listdata_model->addCondition($condition['filter_effected_field'],'<',$value2);
+				}else{
+					$this->listdata_model->addCondition($condition['filter_effected_field'],$operator,$value);
+				}
+
+
 			}
 		}
 	}
