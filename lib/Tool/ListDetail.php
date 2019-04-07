@@ -64,7 +64,10 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 		$options = [
 			'customformid'=>$form_id,
 			'custom_form_success_url'=>null,
-			'implement_form_layout'=>false
+			'implement_form_layout'=>false,
+			'success_message'=>'Thank you for enquiry',
+			'submit_btn_class'=>'btn btn-warning theme-bg-color',
+			'default_value_data_array'=>$this->listdata_model->data
 		];
 		$related_data = ['related_type'=>$this->listing_model->getTableName(),'related_id'=>$this->listdata_model->id];
 			
