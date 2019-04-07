@@ -7,6 +7,7 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 					'listing_id'=>0,
 					'show_public_fields'=>true,
 					'show_private_fields'=>'onLogin', //0,always,onLogin
+					'show_private_fields_custom_message'=>null, //0,always,onLogin
 					'show_protected_fields'=>true,
 					'allow_private_message'=>true,
 					'allow_review'=>true,
@@ -93,8 +94,13 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 			if($this->options['show_private_fields'] AND $model[$normalize_name]){
 				if($this->options['show_private_fields'] == 'onLogin' && $this->app->auth->model->loaded())
 					$this->template->trySetHtml($normalize_name,$model[$normalize_name]);
-				else
-					$this->template->trySetHtml($normalize_name,"<small class='label label-warning label-small'> Login Required For ".$normalize_name.'</small>');
+				else{
+					$cst_html = "<small class='label label-warning label-small'> Login Required For ".$normalize_name.'</small>';
+					if($this->options['show_private_fields_custom_message']){
+						$cst_html = $this->options['show_private_fields_custom_message'];
+					}
+					$this->template->trySetHtml($normalize_name,$cst_html);
+				}
 			}else{
 				$this->template->trySetHtml($normalize_name,"");
 				$this->template->tryDel($normalize_name."_wrapper");
