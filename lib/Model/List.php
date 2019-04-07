@@ -136,6 +136,7 @@ class Model_List extends \xepan\base\Model_Table{
 
             ]);
 		$crud->setModel($model);
+		$crud->grid->addQuickSearch(['name']);
 
 	}
 
