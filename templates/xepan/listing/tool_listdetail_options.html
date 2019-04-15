@@ -101,6 +101,14 @@
         </select>
       </td>
     </tr>
+    <tr class="xepan-tool-option">
+      <td class="xepan-tool-option-value">
+        <div class="xepan-tool-option-title">Show Data Of Status Only</div>
+        <select id="listing_status_to_show" data-attr="show_data_of_status" data-defaultvalue="0">
+        </select>
+      </td>
+    </tr>
+
 
   </table>
   <script>
@@ -128,5 +136,18 @@
           $(this).val(default_value);
         });
       });
+
+    $('#{$_name} #xepan-listing-id').on('change',function(){
+        // list status
+        $.ajax({
+          url: 'index.php?page=xepan_listing_getrecord_listingstatus',
+          type: 'GET',
+          data: {'listing_id':$(this).val() },
+          success: function ( data ){
+            $('#{$_name} #listing_status_to_show').html(data);
+            $('#{$_name} #listing_status_to_show').val($(current_selected_component).attr('show_data_of_status'));
+          }
+        });
+    });
   </script>
 </div>
