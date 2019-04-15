@@ -15,9 +15,9 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 					'show_social_share'=>false,
 					'custom_template'=>null,
 					'show_detail_if_permitted'=>false,
-					'show_custom_form'=>false
+					'show_custom_form'=>false,
+					'show_data_of_status'=>null //cross check status of list data 
 				];
-	
 	function init(){
 		parent::init();
 
@@ -48,6 +48,12 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 		}
 		if(!$this->options['custom_template']){
 			$this->add('View_Warning')->addClass('alert alert-warning')->set('Please add your custom template');
+		}
+
+		if($this->options['show_data_of_status'] && $this->listdata_model['status'] != $this->options['show_data_of_status']){
+			$this->add('View_Warning')->addClass('alert alert-warning')->set("You are not permitted to view this detail");
+			$this->template->tryDel("detail_wrapper");
+			return;
 		}
 
 		$this->listdata_model['last_viewed_at'] = $this->app->now;
@@ -120,11 +126,9 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 	}
 
 	function defaultTemplate(){
-
 		if($message = $this->requiredOptionMessage()){
 			return parent::defaultTemplate();
 		}
-		
 
 		$layout = trim($this->options['custom_template']);
 		if(!$layout){
@@ -132,5 +136,6 @@ class Tool_ListDetail extends \xepan\cms\View_Tool{
 		}
 
 		return ['view/tool/listing/listdetail/'.$layout];
+
 	}
 }
