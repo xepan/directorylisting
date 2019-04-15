@@ -130,6 +130,9 @@ class Tool_List extends \xepan\cms\View_Tool{
 			$this->listdata_model->addCondition('list_id',$this->listing_model->id);
 		}
 
+		if($this->options['status_to_show']){			
+			$this->listdata_model->addCondition('status',explode(",",$this->options['status_to_show']));	
+		}
 		// if($_GET['xlcategory_id'] && $this->options['show_category_breadcum']){			
 			// $str = $this->getCategoryBreadCumbs($_GET['xlcategory_id']);
 			// $this->lister->add('View')->set($str);
@@ -348,8 +351,7 @@ class Tool_List extends \xepan\cms\View_Tool{
 	}
 
 	function addToolCondition_status_to_show($value,$model){
-		if(!$value) return;
-		
+		if(!$value) return;		
 		$model->addCondition('status',explode(",", $value));
 	}
 
